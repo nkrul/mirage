@@ -2,6 +2,8 @@ package com.kncept.mirage.classformat;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.List;
 
 import com.kncept.mirage.Mirage;
 import com.kncept.mirage.classformat.parser.DataTypesParser;
@@ -11,6 +13,7 @@ public class InputStreamMirage implements Mirage {
 	
 	private String name;
 	private String superclassName;
+	private List<String> implementedInterfaces;
 	
 	public InputStreamMirage(InputStream in) {
 		try {
@@ -19,6 +22,14 @@ public class InputStreamMirage implements Mirage {
 
 			name = jvmClassnameToJavaClassname(cf.className());
 			superclassName = jvmClassnameToJavaClassname(cf.superclassName());
+			
+			List<String> jvmInterfaces = cf.interfaceNames();
+			implementedInterfaces = new ArrayList<>(jvmInterfaces.size());
+			for(String interfaceName: jvmInterfaces) {
+				implementedInterfaces.add(jvmClassnameToJavaClassname(interfaceName));
+			}
+			
+			
 		} catch (IOException e) {
 			throw new RuntimeException(e);
 		}
@@ -36,6 +47,11 @@ public class InputStreamMirage implements Mirage {
 	@Override
 	public String getSuperclassName() {
 		return superclassName;
+	}
+	
+	@Override
+	public List<String> getImplementedInterfaces() {
+		return implementedInterfaces;
 	}
 	
 }
