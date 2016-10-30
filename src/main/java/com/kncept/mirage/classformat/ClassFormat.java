@@ -1,24 +1,30 @@
 package com.kncept.mirage.classformat;
 
+import java.io.IOException;
+import java.io.InputStream;
+
 import com.kncept.mirage.Mirage;
+import com.kncept.mirage.classformat.parser.DataTypesParser;
+import com.kncept.mirage.classformat.parser.struct.ClassFile;
 
 public class ClassFormat implements Mirage {
 	
-	final byte[] data;
+	private String name;
 	
-	public ClassFormat(byte[] data) {
-		this.data = data;
-	}
+	public ClassFormat(InputStream in) {
+		try {
+			ClassFile cf = new ClassFile();
+			cf.parse(new DataTypesParser(in));
 
-	@Override
-	public Object source() {
-		return data;
+			this.name = cf.className().replaceAll("\\/", ".");
+		} catch (IOException e) {
+			throw new RuntimeException(e);
+		}
 	}
-
+	
 	@Override
 	public String getName() {
-		// TODO Auto-generated method stub
-		return null;
+		return name;
 	}
 	
 }

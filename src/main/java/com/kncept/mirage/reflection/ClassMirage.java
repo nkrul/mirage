@@ -11,11 +11,6 @@ public class ClassMirage implements Mirage {
 	}
 	
 	@Override
-	public Object source() {
-		return source;
-	}
-	
-	@Override
 	public String getName() {
 		return source.getName();
 	}
