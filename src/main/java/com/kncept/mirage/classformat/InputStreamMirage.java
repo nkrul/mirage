@@ -7,16 +7,18 @@ import com.kncept.mirage.Mirage;
 import com.kncept.mirage.classformat.parser.DataTypesParser;
 import com.kncept.mirage.classformat.parser.struct.ClassFile;
 
-public class ClassFormat implements Mirage {
+public class InputStreamMirage implements Mirage {
 	
 	private String name;
+	private String superclassName;
 	
-	public ClassFormat(InputStream in) {
+	public InputStreamMirage(InputStream in) {
 		try {
 			ClassFile cf = new ClassFile();
 			cf.parse(new DataTypesParser(in));
 
-			this.name = jvmClassnameToJavaClassname(cf.className());
+			name = jvmClassnameToJavaClassname(cf.className());
+			superclassName = jvmClassnameToJavaClassname(cf.superclassName());
 		} catch (IOException e) {
 			throw new RuntimeException(e);
 		}
@@ -29,6 +31,11 @@ public class ClassFormat implements Mirage {
 	@Override
 	public String getName() {
 		return name;
+	}
+	
+	@Override
+	public String getSuperclassName() {
+		return superclassName;
 	}
 	
 }
