@@ -130,7 +130,7 @@ public class ClassFile implements Parsable {
 	}
 	
 	public List<String> interfaceNames() {
-		List<String> list = new ArrayList<>(interfaces_count);
+		List<String> list = new ArrayList<String>(interfaces_count);
 		for(int i = 0; i < interfaces_count; i++) {
 			list.add(getCONSTANT_Class_info(interfaces[i]));
 		}

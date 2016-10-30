@@ -57,7 +57,7 @@ public class cp_info implements Parsable {
 	}
 	
 	public static Map<Byte, Class<? extends cp_info_tag_struct>> tagMapping() {
-		Map<Byte, Class<? extends cp_info_tag_struct>> tags = new HashMap<>();
+		Map<Byte, Class<? extends cp_info_tag_struct>> tags = new HashMap<Byte, Class<? extends cp_info_tag_struct>>();
 		tags.put((byte)1, CONSTANT_Utf8_info.class);
 		
 		tags.put((byte)3, CONSTANT_Integer_info.class);
