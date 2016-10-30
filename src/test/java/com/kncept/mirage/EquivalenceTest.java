@@ -1,10 +1,14 @@
 package com.kncept.mirage;
 
-import org.junit.Assert;
-import org.junit.Test;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
+import org.junit.jupiter.api.Test;
+import org.junit.platform.runner.JUnitPlatform;
+import org.junit.runner.RunWith;
 
 import com.kncept.mirage.reflection.ClassMirage;
 
+@RunWith(JUnitPlatform.class)
 public class EquivalenceTest {
 
 	Class<?> reflection = getClass();
@@ -13,7 +17,7 @@ public class EquivalenceTest {
 	
 	@Test
 	public void name() {
-		Assert.assertEquals(reflection.getName(), mirage.getName());
+		assertEquals(reflection.getName(), mirage.getName());
 	}
 	
 }

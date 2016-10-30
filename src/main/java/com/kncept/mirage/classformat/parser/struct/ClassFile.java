@@ -77,7 +77,7 @@ public class ClassFile implements Parsable {
 		major_version = in.u2();
 		
 		constant_pool_count = in.u2();
-		constant_pool = new cp_info[constant_pool_count - 1];
+		constant_pool = new cp_info[constant_pool_count];
 		for(int i = 1; i < constant_pool.length; i++) { //1 indexed as well!
 			constant_pool[i] = new cp_info();
 			constant_pool[i].parse(in);
