@@ -5,6 +5,11 @@ import java.io.InputStream;
 import java.nio.charset.Charset;
 import java.nio.charset.CharsetDecoder;
 
+/**
+ * TODO: implement java.io.DataInput
+ * @author user47
+ *
+ */
 public class DataTypesParser {
 	private final InputStream in;
 	

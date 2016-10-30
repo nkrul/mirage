@@ -1,6 +1,8 @@
 package com.kncept.mirage.classformat.parser.struct;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 import com.kncept.mirage.classformat.parser.DataTypesParser;
 import com.kncept.mirage.classformat.parser.Parsable;
@@ -59,27 +61,80 @@ public class ClassFile implements Parsable {
 	public int access_flags;
 	public int this_class;
 	public int super_class;
+	public int interfaces_count;
+	public int[] interfaces;
+	public int fields_count;
+	public field_info[] fields;
+	public int methods_count;
+	public method_info[] methods;
+	public int attributes_count;
+	public attribute_info[] attributes;
 	
 	@Override
 	public void parse(DataTypesParser in) throws IOException {
 		magic = in.u4();
 		minor_version = in.u2();
 		major_version = in.u2();
+		
 		constant_pool_count = in.u2();
 		constant_pool = new cp_info[constant_pool_count - 1];
 		for(int i = 1; i < constant_pool.length; i++) { //1 indexed as well!
 			constant_pool[i] = new cp_info();
 			constant_pool[i].parse(in);
 		}
+		
 		access_flags = in.u2();
 		this_class = in.u2(); //CONSTANT_Class_info offset
-		super_class = in.u2();
+		super_class = in.u2(); //CONSTANT_Class_info offset
+		
+		interfaces_count = in.u2();
+		interfaces = new int[interfaces_count];
+		for(int i = 0; i < interfaces_count; i++) {
+			interfaces[i] = in.u2(); //CONSTANT_Class_info
+		}
+		
+		fields_count = in.u2();
+		fields = new field_info[fields_count];
+		for(int i = 0; i < fields_count; i++) {
+			fields[i] = new field_info();
+			fields[i].parse(in);
+		}
+		
+		methods_count = in.u2();
+		methods = new method_info[methods_count];
+		for(int i = 0; i < methods_count; i++) {
+			methods[i] = new method_info();
+			methods[i].parse(in);
+		}
+		
+		attributes_count = in.u2();
+		attributes = new attribute_info[attributes_count];
+		for(int i = 0; i < attributes_count; i++) {
+			attributes[i] = new attribute_info();
+			attributes[i].parse(in);
+		}
+	}
+	
+	private String getCONSTANT_Class_info(int offset) {
+		CONSTANT_Class_info classInfo = (CONSTANT_Class_info)constant_pool[offset].info;
+		CONSTANT_Utf8_info className = (CONSTANT_Utf8_info)constant_pool[classInfo.name_index].info;
+		return className.value();
 	}
 	
 	public String className() {
-		CONSTANT_Class_info classInfo = (CONSTANT_Class_info)constant_pool[this_class].info;
-		CONSTANT_Utf8_info className = (CONSTANT_Utf8_info)constant_pool[classInfo.name_index].info;
-		return className.value();
+		return getCONSTANT_Class_info(this_class);
+	}
+	
+	public String superclassName() {
+		return getCONSTANT_Class_info(super_class);
+	}
+	
+	public List<String> interfaceNames() {
+		List<String> list = new ArrayList<>(interfaces_count);
+		for(int i = 0; i < interfaces_count; i++) {
+			list.add(getCONSTANT_Class_info(interfaces[i]));
+		}
+		return list;
 	}
 	
 }

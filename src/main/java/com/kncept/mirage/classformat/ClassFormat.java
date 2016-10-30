@@ -16,10 +16,14 @@ public class ClassFormat implements Mirage {
 			ClassFile cf = new ClassFile();
 			cf.parse(new DataTypesParser(in));
 
-			this.name = cf.className().replaceAll("\\/", ".");
+			this.name = jvmClassnameToJavaClassname(cf.className());
 		} catch (IOException e) {
 			throw new RuntimeException(e);
 		}
+	}
+	
+	private String jvmClassnameToJavaClassname(String name) {
+		return name.replaceAll("\\/", ".");
 	}
 	
 	@Override
