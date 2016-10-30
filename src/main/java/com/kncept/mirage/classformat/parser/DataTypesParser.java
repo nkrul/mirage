@@ -7,7 +7,7 @@ import java.nio.charset.CharsetDecoder;
 
 /**
  * TODO: implement java.io.DataInput
- * @author user47
+ * @author nick
  *
  */
 public class DataTypesParser {
