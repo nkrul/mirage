@@ -2,8 +2,8 @@ package com.kncept.mirage.classformat.parser.struct;
 
 import java.io.IOException;
 
-import com.kncept.mirage.classformat.parser.DataTypesParser;
-import com.kncept.mirage.classformat.parser.Parsable;
+import com.kncept.mirage.classformat.parser.ClassFileByteParser;
+import com.kncept.mirage.classformat.parser.SimpleDataTypesStream;
 
 /**
  *
@@ -47,7 +47,7 @@ ACC_ENUM	0x4000	Declared as an enum type.
  * https://docs.oracle.com/javase/specs/jvms/se7/html/jvms-4.html
  * https://jcp.org/aboutJava/communityprocess/maintenance/jsr924/JVMS-SE5.0-Ch4-ClassFile.pdf
  */
-public class ClassFile implements Parsable {
+public class ClassFile implements ClassFileByteParser {
 
 	public int magic;
 	public int minor_version;
@@ -69,7 +69,7 @@ public class ClassFile implements Parsable {
 	public attribute_info[] attributes;
 	
 	@Override
-	public void parse(DataTypesParser in) throws IOException {
+	public void parse(SimpleDataTypesStream in) throws IOException {
 		magic = in.u4();
 		minor_version = in.u2();
 		major_version = in.u2();
@@ -77,7 +77,7 @@ public class ClassFile implements Parsable {
 		constant_pool_count = in.u2();
 		constant_pool = new cp_info[constant_pool_count];
 		for(int i = 1; i < constant_pool.length; i++) { //1 indexed as well!
-			constant_pool[i] = new cp_info();
+			constant_pool[i] = cp_info.getStruct(in);	
 			constant_pool[i].parse(in);
 		}
 		
@@ -95,20 +95,20 @@ public class ClassFile implements Parsable {
 		fields = new field_info[fields_count];
 		for(int i = 0; i < fields_count; i++) {
 			fields[i] = new field_info();
-			fields[i].parse(in);
+			fields[i].parse(in, constant_pool);
 		}
 		
 		methods_count = in.u2();
 		methods = new method_info[methods_count];
 		for(int i = 0; i < methods_count; i++) {
 			methods[i] = new method_info();
-			methods[i].parse(in);
+			methods[i].parse(in, constant_pool);
 		}
 		
 		attributes_count = in.u2();
 		attributes = new attribute_info[attributes_count];
 		for(int i = 0; i < attributes_count; i++) {
-			attributes[i] = new attribute_info();
+			attributes[i] = attribute_info.getStruct(in, constant_pool);
 			attributes[i].parse(in);
 		}
 	}

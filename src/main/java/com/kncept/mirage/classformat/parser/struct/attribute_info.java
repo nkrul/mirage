@@ -1,51 +1,100 @@
 package com.kncept.mirage.classformat.parser.struct;
 
 import java.io.IOException;
+import java.lang.reflect.Constructor;
+import java.util.HashMap;
+import java.util.Map;
 
-import com.kncept.mirage.classformat.parser.DataTypesParser;
-import com.kncept.mirage.classformat.parser.Parsable;
+import com.kncept.mirage.classformat.parser.ClassFileByteParser;
+import com.kncept.mirage.classformat.parser.SimpleDataTypesStream;
+import com.kncept.mirage.classformat.parser.struct.attributes.Signature_attribute;
 
 /**
  * 
 <pre>
-
 attribute_info {
 	u2 attribute_name_index;
 	u4 attribute_length;
 	u1 info[attribute_length];
 }
-
-The attributes defined by this specification as appearing in the attributes table of a field_info structure are ConstantValue, Synthetic, Signature, Deprecated, RuntimeVisibleAnnotations and RuntimeInvisibleAnnotations.
-
-A Java Virtual Machine implementation must recognize and correctly read ConstantValue attributes found in the attributes table of a field_info structure. If a Java Virtual Machine implementation recognizes class files whose version number is 49.0 or above, it must recognize and correctly read Signature, RuntimeVisibleAnnotations and RuntimeInvisibleAnnotations attributes found in the attributes table of a field_info structure of a class file whose version number is 49.0 or above.
 </pre>
+
+ClassFile attributes:<pre>
+ConstantValue
+Code
+StackMapTable
+Exceptions
+InnerClasses
+EnclosingMethod
+Synthetic
+Signature
+SourceFile
+SourceDebugExtension
+LineNumberTable
+LocalVariableTable
+LocalVariableTypeTable
+Deprecated
+RuntimeVisibleAnnotations
+RuntimeInvisibleAnnotations
+RuntimeVisibleParameterAnnotations
+RuntimeInvisibleParameterAnnotations
+AnnotationDefault
+BootstrapMethods
+</pre>
+
  * 
  * 
  * @author nick
  *
  */
-public class attribute_info implements Parsable {
+public abstract class attribute_info implements ClassFileByteParser {
 	public int attribute_name_index; //constant pool ref for a CONSTANT_Utf8_info type
 	public int attribute_length;
-	public byte[] info;
 	
-	@Override
-	public void parse(DataTypesParser in) throws IOException {
-		attribute_name_index = in.u2();
-		attribute_length = in.u4();
+	public attribute_info(int attribute_name_index, int attribute_length) {
+		this.attribute_name_index = attribute_name_index;
+		this.attribute_length = attribute_length;
+	}
+	
+	public static attribute_info getStruct(SimpleDataTypesStream in, cp_info[] zeroPaddedConstantPool) throws IOException {
+		int attribute_name_index = in.u2();
+		int attribute_length = in.u4();
 		
-		//this is contextual on the name
-		info = in.bytes(attribute_length);
+		String name = ((CONSTANT_Utf8_info)zeroPaddedConstantPool[attribute_name_index]).value();
+		Class<? extends attribute_info> attributeType = attributeMapping().get(name);
+		
+		if (attributeType == null)
+			return new UnknownAttributeInfo(attribute_name_index, attribute_length);
+		
+		try {
+			Constructor<? extends attribute_info> constructor = attributeType.getConstructor(int.class, int.class);
+			return constructor.newInstance(attribute_name_index, attribute_length);
+		} catch (Exception e) {
+			throw new RuntimeException(e);
+		}
 	}
 	
-	//marker interface
-	/**
-	 * Marker interface.<br>
-	 * Use AttributesMapper to look up the correct value
-	 * @author nick
-	 *
-	 */
-	public static interface attribute_info_struct extends Parsable {
+	public static Map<String, Class<? extends attribute_info>> attributeMapping() {
+		Map<String, Class<? extends attribute_info>> attributes = new HashMap<String, Class<? extends attribute_info>>();
+		
+		attributes.put("Signature", Signature_attribute.class);
+		
+		return attributes;
 	}
-
+	
+	
+	public static class UnknownAttributeInfo extends attribute_info {
+		
+		public byte[] data;
+		
+		public UnknownAttributeInfo(int attribute_name_index, int attribute_length) {
+			super(attribute_name_index, attribute_length);
+		}
+		
+		@Override
+		public void parse(SimpleDataTypesStream in) throws IOException {
+			data = in.bytes(attribute_length);
+		}
+	}
+	
 }

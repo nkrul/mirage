@@ -7,7 +7,7 @@ import java.io.InputStream;
 
 import org.junit.Test;
 
-import com.kncept.mirage.classformat.parser.DataTypesParser;
+import com.kncept.mirage.classformat.parser.SimpleDataTypesStream;
 
 
 public class ClassFileTest {
@@ -22,10 +22,10 @@ public class ClassFileTest {
 	public void className() throws IOException {
 		ClassFile cf = parseClassFile();
 		cp_info info = cf.constant_pool[cf.this_class];
-		assertEquals(CONSTANT_Class_info.class, info.info.getClass());
-		info = cf.constant_pool[((CONSTANT_Class_info)info.info).name_index];
-		assertEquals(CONSTANT_Utf8_info.class, info.info.getClass());
-		String className = new String(((CONSTANT_Utf8_info)info.info).bytes, "UTF-8");
+		assertEquals(CONSTANT_Class_info.class, info.getClass());
+		info = cf.constant_pool[((CONSTANT_Class_info)info).name_index];
+		assertEquals(CONSTANT_Utf8_info.class, info.getClass());
+		String className = ((CONSTANT_Utf8_info)info).value();
 		
 		assertEquals(testClass().getName().replaceAll("\\.", "/"), className); //classNames 
 	}
@@ -39,7 +39,7 @@ public class ClassFileTest {
 		InputStream classBytesInputStream = getClass().getClassLoader().getResourceAsStream(classResourceName);
 		
 		ClassFile cf = new ClassFile();
-		cf.parse(new DataTypesParser(classBytesInputStream));
+		cf.parse(new SimpleDataTypesStream(classBytesInputStream));
 		return cf;
 	}
 	

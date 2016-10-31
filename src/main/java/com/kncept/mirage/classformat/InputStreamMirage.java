@@ -2,13 +2,12 @@ package com.kncept.mirage.classformat;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.List;
 
 import com.kncept.mirage.Mirage;
 import com.kncept.mirage.MirageField;
-import com.kncept.mirage.classformat.parser.DataTypesParser;
+import com.kncept.mirage.classformat.parser.SimpleDataTypesStream;
 import com.kncept.mirage.classformat.parser.descriptor.FieldTypeDescriptor;
 import com.kncept.mirage.classformat.parser.struct.CONSTANT_Class_info;
 import com.kncept.mirage.classformat.parser.struct.CONSTANT_Utf8_info;
@@ -17,14 +16,13 @@ import com.kncept.mirage.classformat.parser.struct.attribute_info;
 import com.kncept.mirage.classformat.parser.struct.field_info;
 
 public class InputStreamMirage implements Mirage {
-	public static final Charset utf8 = Charset.forName("UTF-8");
 	
 	private final ClassFile cf;
 	
 	public InputStreamMirage(InputStream in) {
 		try {
 			cf = new ClassFile();
-			cf.parse(new DataTypesParser(in));
+			cf.parse(new SimpleDataTypesStream(in));
 		} catch (IOException e) {
 			throw new RuntimeException(e);
 		}
@@ -35,12 +33,12 @@ public class InputStreamMirage implements Mirage {
 	}
 	
 	private String constantPoolUTF8(int offset) {
-		CONSTANT_Utf8_info utf8Info = (CONSTANT_Utf8_info)cf.constant_pool[offset].info;
-		return new String(utf8Info.bytes, utf8);
+		CONSTANT_Utf8_info utf8Info = (CONSTANT_Utf8_info)cf.constant_pool[offset];
+		return utf8Info.value();
 	}
 	
 	private String constantPoolClassInfo(int offset) {
-		CONSTANT_Class_info classInfo = (CONSTANT_Class_info)cf.constant_pool[offset].info;
+		CONSTANT_Class_info classInfo = (CONSTANT_Class_info)cf.constant_pool[offset];
 		return constantPoolUTF8(classInfo.name_index);
 	}
 	

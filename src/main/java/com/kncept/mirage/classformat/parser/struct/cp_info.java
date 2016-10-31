@@ -1,11 +1,13 @@
 package com.kncept.mirage.classformat.parser.struct;
 
 import java.io.IOException;
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.kncept.mirage.classformat.parser.DataTypesParser;
-import com.kncept.mirage.classformat.parser.Parsable;
+import com.kncept.mirage.classformat.parser.SimpleDataTypesStream;
+import com.kncept.mirage.classformat.parser.ClassFileByteParser;
 
 /**
  * 
@@ -33,31 +35,31 @@ CONSTANT_Utf8 1
  * @author nick
  *
  */
-public class cp_info implements Parsable {
-	
+public abstract class cp_info implements ClassFileByteParser {
 	public byte tag;
-	public cp_info_tag_struct info;
 	
-	@Override
-	public void parse(DataTypesParser in) throws IOException {
-		tag = in.u1();
-		Class<? extends cp_info_tag_struct> type = tagMapping().get(tag);
-		if (type == null)
-			throw new RuntimeException("No cp_info mapping for " + tag);
+	public cp_info(byte tag) {
+		this.tag = tag;
+	}
+	
+	public static cp_info getStruct(SimpleDataTypesStream in) throws IOException {
+		byte tag = in.u1();
+		
+		Class<? extends cp_info> tagMappingType = tagMapping().get(tag);
+		
+		if (tagMappingType == null)
+			throw new RuntimeException("Unknown tag type: " + tag);
+		
 		try {
-			info = type.newInstance();
-			if (tag != (byte)info.tag())
-				throw new RuntimeException("mismatch:: " + type.getName());
-			info.parse(in);
-		} catch (InstantiationException e) {
-			throw new RuntimeException(e);
-		} catch (IllegalAccessException e) {
+			Constructor<? extends cp_info> constructor = tagMappingType.getConstructor(byte.class);
+			return constructor.newInstance(tag);
+		} catch (Exception e) {
 			throw new RuntimeException(e);
 		}
 	}
 	
-	public static Map<Byte, Class<? extends cp_info_tag_struct>> tagMapping() {
-		Map<Byte, Class<? extends cp_info_tag_struct>> tags = new HashMap<Byte, Class<? extends cp_info_tag_struct>>();
+	public static Map<Byte, Class<? extends cp_info>> tagMapping() {
+		Map<Byte, Class<? extends cp_info>> tags = new HashMap<Byte, Class<? extends cp_info>>();
 		tags.put((byte)1, CONSTANT_Utf8_info.class);
 		
 		tags.put((byte)3, CONSTANT_Integer_info.class);
@@ -76,10 +78,6 @@ public class cp_info implements Parsable {
 		
 		tags.put((byte)12,  CONSTANT_NameAndType_info.class);
 		return tags;
-	}
-	
-	public static interface cp_info_tag_struct extends Parsable {
-		public int tag();
 	}
 	
 }

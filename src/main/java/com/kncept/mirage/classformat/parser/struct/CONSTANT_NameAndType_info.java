@@ -2,8 +2,7 @@ package com.kncept.mirage.classformat.parser.struct;
 
 import java.io.IOException;
 
-import com.kncept.mirage.classformat.parser.DataTypesParser;
-import com.kncept.mirage.classformat.parser.struct.cp_info.cp_info_tag_struct;
+import com.kncept.mirage.classformat.parser.SimpleDataTypesStream;
 
 /**
  * 
@@ -18,18 +17,18 @@ CONSTANT_NameAndType_info {
  * @author nick
  *
  */
-public class CONSTANT_NameAndType_info implements cp_info_tag_struct {
-	int name_index;
-	int descriptor_index;
+public class CONSTANT_NameAndType_info extends cp_info {
+	public int name_index;
+	public int descriptor_index;
+	
+	public CONSTANT_NameAndType_info(byte tag) {
+		super(tag);
+	}
 	
 	@Override
-	public void parse(DataTypesParser in) throws IOException {
+	public void parse(SimpleDataTypesStream in) throws IOException {
 		name_index = in.u2();
 		descriptor_index = in.u2();
 	}
-	
-	@Override
-	public int tag() {
-		return 12;
-	}
+
 }

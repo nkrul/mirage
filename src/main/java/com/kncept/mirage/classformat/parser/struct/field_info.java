@@ -2,8 +2,8 @@ package com.kncept.mirage.classformat.parser.struct;
 
 import java.io.IOException;
 
-import com.kncept.mirage.classformat.parser.DataTypesParser;
-import com.kncept.mirage.classformat.parser.Parsable;
+import com.kncept.mirage.classformat.parser.ClassFileConstantPoolByteParser;
+import com.kncept.mirage.classformat.parser.SimpleDataTypesStream;
 
 /**
  * 
@@ -33,7 +33,7 @@ ACC_ENUM 0x4000 Declared as an element of an enum.
  * @author nick
  *
  */
-public class field_info implements Parsable {
+public class field_info implements ClassFileConstantPoolByteParser {
 	public int access_flags;
 	public int name_index;
 	public int descriptor_index;
@@ -41,14 +41,14 @@ public class field_info implements Parsable {
 	public attribute_info[] attributes;
 
 	@Override
-	public void parse(DataTypesParser in) throws IOException {
+	public void parse(SimpleDataTypesStream in, cp_info[] zeroPaddedConstantPool) throws IOException {
 		access_flags = in.u2();
 		name_index = in.u2();
 		descriptor_index = in.u2();
 		attributes_count = in.u2();
 		attributes = new attribute_info[attributes_count];
 		for(int i = 0; i < attributes_count; i++) {
-			attributes[i] = new attribute_info();
+			attributes[i] = attribute_info.getStruct(in, zeroPaddedConstantPool);
 			attributes[i].parse(in);
 		}
 	}

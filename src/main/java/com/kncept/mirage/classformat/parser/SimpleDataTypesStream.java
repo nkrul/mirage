@@ -10,14 +10,14 @@ import java.nio.charset.CharsetDecoder;
  * @author nick
  *
  */
-public class DataTypesParser {
+public class SimpleDataTypesStream {
 	private final InputStream in;
 	
 	Charset utf8 = Charset.forName("UTF-8");
 	CharsetDecoder utf8Decoder = utf8.newDecoder();
 	
 	
-	public DataTypesParser(InputStream in) {
+	public SimpleDataTypesStream(InputStream in) {
 		this.in = in;
 	}
 
