@@ -1,7 +1,6 @@
 package com.kncept.mirage.classformat.parser.struct;
 
 import java.io.IOException;
-import java.nio.charset.Charset;
 
 import com.kncept.mirage.classformat.parser.DataTypesParser;
 import com.kncept.mirage.classformat.parser.struct.cp_info.cp_info_tag_struct;
@@ -20,9 +19,8 @@ CONSTANT_Utf8_info {
  *
  */
 public class CONSTANT_Utf8_info implements cp_info_tag_struct {
-	public static final Charset utf8 = Charset.forName("UTF-8");
-	int length;
-	byte[] bytes;
+	public int length;
+	public byte[] bytes;
 	
 	@Override
 	public void parse(DataTypesParser in) throws IOException {
@@ -33,9 +31,5 @@ public class CONSTANT_Utf8_info implements cp_info_tag_struct {
 	@Override
 	public int tag() {
 		return 1;
-	}
-	
-	public String value() {
-		return new String(bytes, utf8);
 	}
 }

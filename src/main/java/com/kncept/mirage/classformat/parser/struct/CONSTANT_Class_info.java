@@ -18,7 +18,7 @@ CONSTANT_Class_info {
  *
  */
 public class CONSTANT_Class_info implements cp_info_tag_struct {
-	int name_index;
+	public int name_index;
 	
 	@Override
 	public void parse(DataTypesParser in) throws IOException {

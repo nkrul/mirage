@@ -10,4 +10,6 @@ public interface Mirage {
 	
 	public List<String> getImplementedInterfaces();
 	
+	public List<MirageField> getFields();
+	
 }

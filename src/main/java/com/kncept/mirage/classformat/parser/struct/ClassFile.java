@@ -1,8 +1,6 @@
 package com.kncept.mirage.classformat.parser.struct;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
 
 import com.kncept.mirage.classformat.parser.DataTypesParser;
 import com.kncept.mirage.classformat.parser.Parsable;
@@ -114,27 +112,5 @@ public class ClassFile implements Parsable {
 			attributes[i].parse(in);
 		}
 	}
-	
-	private String getCONSTANT_Class_info(int offset) {
-		CONSTANT_Class_info classInfo = (CONSTANT_Class_info)constant_pool[offset].info;
-		CONSTANT_Utf8_info className = (CONSTANT_Utf8_info)constant_pool[classInfo.name_index].info;
-		return className.value();
-	}
-	
-	public String className() {
-		return getCONSTANT_Class_info(this_class);
-	}
-	
-	public String superclassName() {
-		return getCONSTANT_Class_info(super_class);
-	}
-	
-	public List<String> interfaceNames() {
-		List<String> list = new ArrayList<String>(interfaces_count);
-		for(int i = 0; i < interfaces_count; i++) {
-			list.add(getCONSTANT_Class_info(interfaces[i]));
-		}
-		return list;
-	}
-	
+
 }

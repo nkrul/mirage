@@ -21,7 +21,13 @@ public class ClassFileTest {
 	@Test
 	public void className() throws IOException {
 		ClassFile cf = parseClassFile();
-		assertEquals(testClass().getName().replaceAll("\\.", "/"), cf.className()); //classNames 
+		cp_info info = cf.constant_pool[cf.this_class];
+		assertEquals(CONSTANT_Class_info.class, info.info.getClass());
+		info = cf.constant_pool[((CONSTANT_Class_info)info.info).name_index];
+		assertEquals(CONSTANT_Utf8_info.class, info.info.getClass());
+		String className = new String(((CONSTANT_Utf8_info)info.info).bytes, "UTF-8");
+		
+		assertEquals(testClass().getName().replaceAll("\\.", "/"), className); //classNames 
 	}
 	
 	private Class<?> testClass() {
