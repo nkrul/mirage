@@ -2,12 +2,11 @@ package com.kncept.mirage.classformat.parser.struct;
 
 import java.io.IOException;
 import java.lang.reflect.Constructor;
-import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.kncept.mirage.classformat.parser.SimpleDataTypesStream;
 import com.kncept.mirage.classformat.parser.ClassFileByteParser;
+import com.kncept.mirage.classformat.parser.SimpleDataTypesStream;
 
 /**
  * 

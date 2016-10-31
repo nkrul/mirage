@@ -8,11 +8,9 @@ import java.util.List;
 import com.kncept.mirage.Mirage;
 import com.kncept.mirage.MirageField;
 import com.kncept.mirage.classformat.parser.SimpleDataTypesStream;
-import com.kncept.mirage.classformat.parser.descriptor.FieldTypeDescriptor;
 import com.kncept.mirage.classformat.parser.struct.CONSTANT_Class_info;
 import com.kncept.mirage.classformat.parser.struct.CONSTANT_Utf8_info;
 import com.kncept.mirage.classformat.parser.struct.ClassFile;
-import com.kncept.mirage.classformat.parser.struct.attribute_info;
 import com.kncept.mirage.classformat.parser.struct.field_info;
 
 public class InputStreamMirage implements Mirage {
@@ -66,23 +64,7 @@ public class InputStreamMirage implements Mirage {
 	public List<MirageField> getFields() {
 		List<MirageField> fields = new ArrayList<MirageField>(cf.fields_count);
 		for(field_info field: cf.fields) {
-			FieldTypeDescriptor typeDescriptor = new FieldTypeDescriptor(constantPoolUTF8(field.descriptor_index));
-			
-			fields.add(new InputStreamMirageField(constantPoolUTF8(field.name_index), typeDescriptor));
-			
-			System.out.println("--------");
-			System.out.println("field name: " + constantPoolUTF8(field.name_index));
-			
-			for(int i = 0; i < field.attributes_count; i++) {
-				attribute_info info = field.attributes[i];
-				System.out.println("Attribute Name: " + constantPoolUTF8(info.attribute_name_index));
-			}
-			
-			
-//			System.out.println(name);
-//			System.out.println(
-//					constantPoolUTF8(field.descriptor_index)
-//					);
+			fields.add(new InputStreamMirageField(cf, field));
 		}
 		return fields;
 	}

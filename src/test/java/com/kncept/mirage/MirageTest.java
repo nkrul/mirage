@@ -1,13 +1,13 @@
 package com.kncept.mirage;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -25,7 +25,7 @@ import com.kncept.mirage.util.MirageProvider;
 @RunWith(Parameterized.class)
 public class MirageTest {
 
-	private Class<?> reflection = getClass();
+	private Class<? extends MirageTest> reflection = getClass();
 	private final MirageProvider provider;
 	
 	//fields for testing types and permissions against
@@ -37,6 +37,12 @@ public class MirageTest {
 	
 	boolean nativeBoolean;
 	Boolean objectBoolean;
+	
+	List<?> genericUnknownList;
+	List<Object> genericObjectList;
+	List<MirageTest> thisClassObjectList;
+	
+	Map<String, String> stringStringMap;
 	
 	@Parameters
 	public static Object[][] params() throws IOException {
@@ -67,6 +73,7 @@ public class MirageTest {
 	
 	@Test
 	public void singleInterfaceImplemented() {
+		@SuppressWarnings("unchecked")
 		List<Class<? extends Mirage>> types = Arrays.asList(ClassReflectionMirage.class, InputStreamMirage.class);
 		for(Class<? extends Mirage> type: types) {
 			Mirage mirage = provider.mirage(type);
@@ -88,8 +95,6 @@ public class MirageTest {
 			} else if (field.getName().equals("provider")) {
 				assertEquals(MirageProvider.class.getName(), type.getBaseType());
 				assertTrue(type.getGenerics().isEmpty());
-			} else {
-//				fail("Unknown field: " + field.getName());
 			}
 		}
 		

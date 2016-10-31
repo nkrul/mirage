@@ -20,7 +20,7 @@ public class ClassReflectionMirageField implements MirageField {
 	
 	@Override
 	public MirageType getType() {
-		return new ClassReflectionMirageType(source.getAnnotatedType().getType());
+		return new ClassReflectionMirageType(source.getType(), source.getGenericType());
 	}
 	
 }
