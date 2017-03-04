@@ -37,6 +37,4 @@ public interface MirageProvider {
 			return type.getClassLoader().getResourceAsStream(classResourceName);
 		}
 	}
-	
-	
 }

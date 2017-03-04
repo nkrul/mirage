@@ -1,10 +1,130 @@
+buildscript {
+    repositories {
+        mavenCentral()
+    }
+    dependencies {
+        classpath 'org.junit.platform:junit-platform-gradle-plugin:1.0.0-M3'
+    }
+}
 
 apply plugin: 'java'
+apply plugin: 'eclipse'
+apply plugin: 'idea'
+ 
+apply plugin: 'org.junit.platform.gradle.plugin'
+
+apply plugin: 'maven'
+apply plugin: 'signing'
+
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
+
+group = 'com.kncept.mirage'
+version = '0.2-SNAPSHOT'
+
+task javadocJar(type: Jar) {
+    classifier = 'javadoc'
+    from javadoc
+}
+
+task sourcesJar(type: Jar) {
+    classifier = 'sources'
+    from sourceSets.main.allSource
+}
+
+jar.manifest {
+	attributes(
+		'Implementation-Title': project.name,
+		'Implementation-Vendor' : 'kncept',
+		'Implementation-Version': project.version,
+		'Implementation-Author': 'Nicholas Krul', //non standard
+		'Created-By': System.getProperty('java.version'),
+		'Built-By': System.getProperty('user.name'),
+		//'Built-Host': getHostname(),
+		'Built-Date': new Date().format("yyyy-MM-dd'T'HH:mm:ssZ"),
+		'Source-Compatibility': project.sourceCompatibility,
+		'Target-Compatibility': project.targetCompatibility
+	)
+}
+
+artifacts {
+    archives javadocJar, sourcesJar
+}
+
+//Allow building but disable signing if the gpg config isn't available
+signing {
+    sign configurations.archives
+}
+signArchives.onlyIf {new File('gradle.properties').exists()}
+
+task wrapper(type: Wrapper) {
+	description = 'gradlew'
+	gradleVersion = '3.4'
+}
 
 repositories {
+	mavenLocal()
     jcenter()
+    mavenCentral()
+}
+
+//hoist properties if gradle.properties exists
+String username = null
+String password = null
+if (project.hasProperty('ossrhUsername')) {
+	username = ossrhUsername
+}
+if (project.hasProperty('ossrhPassword')) {
+	password = ossrhPassword
+}
+
+uploadArchives {
+  repositories {
+    mavenDeployer {
+      beforeDeployment { MavenDeployment deployment -> signing.signPom(deployment) }
+
+      repository(url: "https://oss.sonatype.org/service/local/staging/deploy/maven2/") {
+        authentication(userName: username, password: password)
+      }
+
+      snapshotRepository(url: "https://oss.sonatype.org/content/repositories/snapshots/") {
+        authentication(userName: username, password: password)
+      }
+
+      pom.project {
+        name 'Junit Dataprovider'
+        packaging 'jar'
+        // optionally artifactId can be defined here 
+        description 'A parser that is capable of handling awkward and dynamic formats with ease'
+        url 'https://github.com/nkrul/universal-parser'
+
+        scm {
+          connection 'scm:https://github.com/nkrul/mirage.git'
+          developerConnection 'scm:https://github.com/nkrul/mirage.git'
+          url 'https://github.com/nkrul/mirage'
+        }
+
+        licenses {
+          license {
+            name 'GNU GENERAL PUBLIC LICENSE v3'
+            url 'https://github.com/nkrul/universal-parser/blob/master/LICENSE'
+          }
+        }
+
+        developers {
+          developer {
+            id 'nkrul'
+            name 'Nicholas Krul'
+            email 'nicholas.krul@gmail.com'
+          }
+        }
+      }
+    }
+  }
 }
 
 dependencies {
-	testCompile 'junit:junit:4.12'
+	testCompile 'org.junit.jupiter:junit-jupiter-api:5.0.0-M3'
+    testCompile 'com.kncept.junit5.dataprovider:junit-dataprovider:0.9-M3' //@ParamaterisedTest
+	testRuntime 'org.junit.jupiter:junit-jupiter-engine:5.0.0-M3'
 }

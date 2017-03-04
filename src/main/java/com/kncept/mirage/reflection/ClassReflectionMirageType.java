@@ -8,8 +8,6 @@ import java.util.List;
 
 import com.kncept.mirage.MirageType;
 
-import sun.reflect.generics.reflectiveObjects.NotImplementedException;
-
 public class ClassReflectionMirageType implements MirageType {
 
 	private final Class<?> type;
@@ -59,11 +57,11 @@ public class ClassReflectionMirageType implements MirageType {
 						System.out.println("((Class)wildcardType.getUpperBounds()[0]).getName() " + ((Class)wildcardType.getUpperBounds()[0]).getName());
 						
 						System.out.println("Unable to deal with these generics yet...");
-						throw new NotImplementedException();
+						throw new RuntimeException("Not Implemented");
 					}
 				} else {
 					System.out.println("type.getClass().getName() " + type.getClass().getName());
-					throw new NotImplementedException();
+					throw new RuntimeException("Not Implemented");
 				}
 			}
 		}

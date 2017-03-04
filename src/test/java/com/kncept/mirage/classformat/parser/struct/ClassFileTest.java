@@ -1,11 +1,13 @@
 package com.kncept.mirage.classformat.parser.struct;
 
-import static org.junit.Assert.assertEquals;
+
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.io.IOException;
 import java.io.InputStream;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import com.kncept.mirage.classformat.parser.SimpleDataTypesStream;
 

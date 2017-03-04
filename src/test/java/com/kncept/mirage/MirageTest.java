@@ -1,19 +1,21 @@
 package com.kncept.mirage;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
+import static com.kncept.junit.dataprovider.testfactory.TestFactoryCallback.instanceProvider;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.junit.runners.Parameterized;
-import org.junit.runners.Parameterized.Parameters;
+import org.junit.jupiter.api.DynamicTest;
+import org.junit.jupiter.api.TestFactory;
 
+import com.kncept.junit.dataprovider.ParameterSource;
+import com.kncept.junit.dataprovider.ParameterisedTest;
 import com.kncept.mirage.classformat.InputStreamMirage;
 import com.kncept.mirage.reflection.ClassReflectionMirage;
 import com.kncept.mirage.util.MirageProvider;
@@ -22,11 +24,9 @@ import com.kncept.mirage.util.MirageProvider;
  * @author nick
  *
  */
-@RunWith(Parameterized.class)
 public class MirageTest {
 
 	private Class<? extends MirageTest> reflection = getClass();
-	private final MirageProvider provider;
 	
 	//fields for testing types and permissions against
 	Object[] arrayObject;
@@ -44,35 +44,36 @@ public class MirageTest {
 	
 	Map<String, String> stringStringMap;
 	
-	@Parameters
-	public static Object[][] params() throws IOException {
+	@TestFactory
+	public Collection<DynamicTest> testFactory() {
+		return instanceProvider(this);
+	}
+	
+	@ParameterSource(name="allTypes")
+	public static Object[][] allTypes() throws IOException {
 		return MirageProvider.ParamsProviders.allTypesAsParameters();
 	}
 	
-	public MirageTest(MirageProvider provider) {
-		this.provider = provider;
-	}
-	
-	@Test
-	public void name() {
+	@ParameterisedTest(source="allTypes")
+	public void name(MirageProvider provider) {
 		Mirage mirage = provider.mirage(getClass());
 		assertEquals(reflection.getName(), mirage.getName());
 	}
 	
-	@Test
-	public void superClass() {
+	@ParameterisedTest(source="allTypes")
+	public void superClass(MirageProvider provider) {
 		Mirage mirage = provider.mirage(getClass());
 		assertEquals(reflection.getSuperclass().getName(), mirage.getSuperclassName());
 	}
 	
-	@Test
-	public void emptymplementedInterfaces() {
+	@ParameterisedTest(source="allTypes")
+	public void emptymplementedInterfaces(MirageProvider provider) {
 		Mirage mirage = provider.mirage(getClass());
 		assertTrue(mirage.getImplementedInterfaces().isEmpty());
 	}
 	
-	@Test
-	public void singleInterfaceImplemented() {
+	@ParameterisedTest(source="allTypes")
+	public void singleInterfaceImplemented(MirageProvider provider) {
 		@SuppressWarnings("unchecked")
 		List<Class<? extends Mirage>> types = Arrays.asList(ClassReflectionMirage.class, InputStreamMirage.class);
 		for(Class<? extends Mirage> type: types) {
@@ -83,8 +84,8 @@ public class MirageTest {
 		}
 	}
 	
-	@Test
-	public void fields() {
+	@ParameterisedTest(source="allTypes")
+	public void fields(MirageProvider provider) {
 		Mirage mirage = provider.mirage(getClass());
 		assertNotNull(mirage.getFields());
 		for (MirageField field: mirage.getFields()) {
