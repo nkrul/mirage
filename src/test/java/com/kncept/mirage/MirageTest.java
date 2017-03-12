@@ -157,13 +157,6 @@ public class MirageTest {
 		
 		assertEquals(1, type.getGenerics().get(1).getGenerics().size());
 		assertEquals(getClass().getName(), type.getGenerics().get(1).getGenerics().get(0).getBaseType());
-		
-
-		
-		
-		System.out.println(provider);
-		for(MirageType mt: type.getGenerics())
-			System.out.println(mt.getBaseType());
 	}
 	
 	@ParameterisedTest(source="allTypes")
