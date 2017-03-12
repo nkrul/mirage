@@ -2,19 +2,20 @@ package com.kncept.mirage.classformat;
 
 import com.kncept.mirage.MirageField;
 import com.kncept.mirage.MirageType;
-import com.kncept.mirage.classformat.parser.descriptor.FieldTypeDescriptor;
 import com.kncept.mirage.classformat.parser.struct.CONSTANT_Utf8_info;
 import com.kncept.mirage.classformat.parser.struct.ClassFile;
 import com.kncept.mirage.classformat.parser.struct.attribute_info;
 import com.kncept.mirage.classformat.parser.struct.field_info;
 import com.kncept.mirage.classformat.parser.struct.attributes.Signature_attribute;
+import com.kncept.mirage.classformat.signature.parser.FieldDescriptorParser;
+import com.kncept.mirage.classformat.signature.parser.FieldTypeSignatureParser;
 
-public class InputStreamMirageField implements MirageField {
+public class ClassFormatMirageField implements MirageField {
 	
 	private final ClassFile cf;
 	private final field_info field;
 	
-	public InputStreamMirageField(ClassFile cf, field_info field) {
+	public ClassFormatMirageField(ClassFile cf, field_info field) {
 		this.cf = cf;
 		this.field = field;
 	}
@@ -25,22 +26,16 @@ public class InputStreamMirageField implements MirageField {
 	}
 	
 	@Override
-	public MirageType getType() {
-		
-		System.out.println("\n\n" + getName());
+	public MirageType getMirageType() {
 		for(attribute_info attr: field.attributes) {
-			System.out.println(attr.getClass().getName());
-			
 			if (attr instanceof Signature_attribute) {
 				Signature_attribute sAttr = (Signature_attribute)attr;
-				
-				System.out.println(((CONSTANT_Utf8_info)cf.constant_pool[sAttr.signature_index]).value());
-				
+				String signatureDescriptor = ((CONSTANT_Utf8_info)cf.constant_pool[sAttr.signature_index]).value();
+				return new FieldTypeSignatureParser().parse(signatureDescriptor);
 			}
 		}
-		
-		
-		return new InputStreamMirageType(new FieldTypeDescriptor(((CONSTANT_Utf8_info)cf.constant_pool[field.descriptor_index]).value()));
+		String descriptor = ((CONSTANT_Utf8_info)cf.constant_pool[field.descriptor_index]).value();
+		return new FieldDescriptorParser().parse(descriptor);
 	}
 
 }

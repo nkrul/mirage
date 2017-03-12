@@ -13,17 +13,21 @@ import com.kncept.mirage.classformat.parser.struct.CONSTANT_Utf8_info;
 import com.kncept.mirage.classformat.parser.struct.ClassFile;
 import com.kncept.mirage.classformat.parser.struct.field_info;
 
-public class InputStreamMirage implements Mirage {
+public class ClassFormatMirage implements Mirage {
 	
 	private final ClassFile cf;
 	
-	public InputStreamMirage(InputStream in) {
+	public ClassFormatMirage(InputStream in) {
 		try {
 			cf = new ClassFile();
 			cf.parse(new SimpleDataTypesStream(in));
 		} catch (IOException e) {
 			throw new RuntimeException(e);
 		}
+	}
+	
+	public ClassFormatMirage(ClassFile cf) {
+		this.cf = cf;
 	}
 	
 	public static String jvmClassnameToJavaClassname(String name) {
@@ -64,7 +68,7 @@ public class InputStreamMirage implements Mirage {
 	public List<MirageField> getFields() {
 		List<MirageField> fields = new ArrayList<MirageField>(cf.fields_count);
 		for(field_info field: cf.fields) {
-			fields.add(new InputStreamMirageField(cf, field));
+			fields.add(new ClassFormatMirageField(cf, field));
 		}
 		return fields;
 	}

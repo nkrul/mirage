@@ -2,9 +2,11 @@ package com.kncept.mirage;
 
 public interface MirageField {
 	
+//	public Mirage getDeclaredBy();
+	
 	public String getName();
 	
-	public MirageType getType();
+	public MirageType getMirageType();
 	
 	//annotations...
 
