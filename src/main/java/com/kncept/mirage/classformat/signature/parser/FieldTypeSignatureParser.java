@@ -35,7 +35,7 @@ TypeVariableSignature:
     T Identifier ;
 
 TypeArguments:
-    < TypeArgument+ >
+   &lt; TypeArgument+ &gt;
 
 TypeArgument:
     WildcardIndicatoropt FieldTypeSignature

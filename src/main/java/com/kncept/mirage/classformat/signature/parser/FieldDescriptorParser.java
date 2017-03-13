@@ -51,7 +51,7 @@ D double double-precision floating-point value
 F float single-precision floating-point value
 I int integer
 J long long integer
-L Classname; reference an instance of class <classname>
+L Classname; reference an instance of class {@code classname}
 S short signed short
 Z boolean true or false
 [ reference one array dimension
