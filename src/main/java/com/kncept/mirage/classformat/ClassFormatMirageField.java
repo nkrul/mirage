@@ -10,6 +10,7 @@ import com.kncept.mirage.classformat.parser.struct.field_info;
 import com.kncept.mirage.classformat.parser.struct.attributes.Signature_attribute;
 import com.kncept.mirage.classformat.signature.parser.FieldDescriptorParser;
 import com.kncept.mirage.classformat.signature.parser.FieldTypeSignatureParser;
+import com.kncept.mirage.classformat.signature.parser.MethodTypeSignatureParser;
 
 public class ClassFormatMirageField implements MirageField {
 	
@@ -37,9 +38,7 @@ public class ClassFormatMirageField implements MirageField {
 	public MirageType getMirageType() {
 		for(attribute_info attr: field.attributes) {
 			if (attr instanceof Signature_attribute) {
-				Signature_attribute sAttr = (Signature_attribute)attr;
-				String signatureDescriptor = ((CONSTANT_Utf8_info)cf.constant_pool[sAttr.signature_index]).value();
-				return new FieldTypeSignatureParser().parse(signatureDescriptor);
+				return new FieldTypeSignatureParser().parse(((Signature_attribute)attr).signature());
 			}
 		}
 		String descriptor = ((CONSTANT_Utf8_info)cf.constant_pool[field.descriptor_index]).value();

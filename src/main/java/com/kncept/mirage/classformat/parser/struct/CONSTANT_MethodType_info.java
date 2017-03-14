@@ -7,28 +7,25 @@ import com.kncept.mirage.classformat.parser.SimpleDataTypesStream;
 /**
  * 
 <pre>
-CONSTANT_Float_info {
-	u1 tag;
-	u4 bytes;
+CONSTANT_MethodType_info {
+    u1 tag;
+    u2 descriptor_index;
 }
 </pre>
  * 
  * @author nick
  *
  */
-public class CONSTANT_Float_info extends cp_info {
-	public int bytes;
+public class CONSTANT_MethodType_info extends cp_info {
+	public int descriptor_index;
 	
-	public CONSTANT_Float_info(byte tag) {
+	public CONSTANT_MethodType_info(byte tag) {
 		super(tag);
 	}
 	
 	@Override
 	public void parse(SimpleDataTypesStream in) throws IOException {
-		bytes = in.u4();
+		descriptor_index = in.u2();
 	}
-	
-	public float toFloat() {
-		return Float.intBitsToFloat(bytes);
-	}
+
 }

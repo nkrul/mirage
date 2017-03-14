@@ -1,14 +1,18 @@
 package com.kncept.mirage.classformat;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import com.kncept.mirage.Mirage;
+import com.kncept.mirage.MirageAnnotation;
 import com.kncept.mirage.MirageMethod;
 import com.kncept.mirage.MirageType;
 import com.kncept.mirage.classformat.parser.struct.CONSTANT_Utf8_info;
 import com.kncept.mirage.classformat.parser.struct.ClassFile;
 import com.kncept.mirage.classformat.parser.struct.attribute_info;
 import com.kncept.mirage.classformat.parser.struct.method_info;
+import com.kncept.mirage.classformat.parser.struct.attributes.RuntimeVisibleAnnotations_attribute;
+import com.kncept.mirage.classformat.parser.struct.attributes.RuntimeVisibleAnnotations_attribute.annotation;
 import com.kncept.mirage.classformat.parser.struct.attributes.Signature_attribute;
 import com.kncept.mirage.classformat.signature.parser.MethodDescriptorParser;
 import com.kncept.mirage.classformat.signature.parser.MethodTypeSignatureParser;
@@ -44,9 +48,7 @@ public class ClassFormatMirageMethod implements MirageMethod {
 	public MirageType getReturnType() {
 		for(attribute_info attr: method_info.attributes) {
 			if (attr instanceof Signature_attribute) {
-				Signature_attribute sAttr = (Signature_attribute)attr;
-				String signatureDescriptor = ((CONSTANT_Utf8_info)cf.constant_pool[sAttr.signature_index]).value();
-				return new MethodTypeSignatureParser().parse(signatureDescriptor).returnType;
+				return new MethodTypeSignatureParser().parse(((Signature_attribute)attr).signature()).returnType;
 			}
 		}
 		String descriptor = ((CONSTANT_Utf8_info)cf.constant_pool[method_info.descriptor_index]).value();
@@ -64,6 +66,20 @@ public class ClassFormatMirageMethod implements MirageMethod {
 		}
 		String descriptor = ((CONSTANT_Utf8_info)cf.constant_pool[method_info.descriptor_index]).value();
 		return new MethodDescriptorParser().parse(descriptor).params;
+	}
+	
+	@Override
+	public List<MirageAnnotation> getAnnotations() {
+		List<MirageAnnotation> annotations = new ArrayList<>();
+		for(attribute_info attr: method_info.attributes) {
+			if (attr instanceof RuntimeVisibleAnnotations_attribute) {
+				RuntimeVisibleAnnotations_attribute annotationAttribute = (RuntimeVisibleAnnotations_attribute)attr;
+				for(annotation annotation: annotationAttribute.annotations) {
+					annotations.add(new ClassFormatMirageAnnotation(annotation));
+				}
+			}
+		}
+		return annotations;
 	}
 	
 }

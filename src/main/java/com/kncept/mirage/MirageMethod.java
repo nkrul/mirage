@@ -14,5 +14,6 @@ public interface MirageMethod {
 	
 	public List<MirageType> getParameterTypes();
 	
+	public List<MirageAnnotation> getAnnotations();
 
 }

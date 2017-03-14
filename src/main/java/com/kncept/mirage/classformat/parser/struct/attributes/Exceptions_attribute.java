@@ -3,39 +3,40 @@ package com.kncept.mirage.classformat.parser.struct.attributes;
 import java.io.IOException;
 
 import com.kncept.mirage.classformat.parser.SimpleDataTypesStream;
-import com.kncept.mirage.classformat.parser.struct.CONSTANT_Utf8_info;
 import com.kncept.mirage.classformat.parser.struct.attribute_info;
 import com.kncept.mirage.classformat.parser.struct.cp_info;
 
 /**
  * 
 <pre>
-Signature_attribute {
-	u2 attribute_name_index;
-	u4 attribute_length;
-	u2 signature_index;
+Exceptions_attribute {
+    u2 attribute_name_index;
+    u4 attribute_length;
+    u2 number_of_exceptions;
+    u2 exception_index_table[number_of_exceptions];
 }
 </pre>
  * 
  * @author nick
  *
  */
-public class Signature_attribute extends attribute_info {
+public class Exceptions_attribute extends attribute_info {
 	
-	public int signature_index;
+	public int number_of_exceptions;
+	public int exception_index_table[];
 	
-	public Signature_attribute(
+	public Exceptions_attribute(
 			int attribute_name_index,
 			int attribute_length,
 			SimpleDataTypesStream in,
 			cp_info[] zeroPaddedConstantPool
-		) throws IOException {
+			) throws IOException {
 		super(attribute_name_index, attribute_length, in, zeroPaddedConstantPool);
-		signature_index = in.u2();
+		number_of_exceptions = in.u2();
+		exception_index_table = new int[number_of_exceptions];
+		for(int i = 0; i < number_of_exceptions; i++)
+			exception_index_table[i] = in.u2();
 	}
 	
-	public String signature() {
-		return ((CONSTANT_Utf8_info)zeroPaddedConstantPool[signature_index]).value();
-	}
 
 }

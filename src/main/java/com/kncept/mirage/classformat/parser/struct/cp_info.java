@@ -29,8 +29,10 @@ CONSTANT_Long 5
 CONSTANT_Double 6
 CONSTANT_NameAndType 12
 CONSTANT_Utf8 1
+CONSTANT_MethodHandle	15
+CONSTANT_MethodType	16
+CONSTANT_InvokeDynamic	18
 </pre>
- * 
  * @author nick
  *
  */
@@ -76,6 +78,11 @@ public abstract class cp_info implements ClassFileByteParser {
 		tags.put((byte)11, CONSTANT_InterfaceMethodref_info.class);
 		
 		tags.put((byte)12,  CONSTANT_NameAndType_info.class);
+		
+		tags.put((byte)15,  CONSTANT_MethodHandle_info.class);
+		tags.put((byte)16,  CONSTANT_MethodType_info.class);
+		tags.put((byte)18,  CONSTANT_InvokeDynamic_info.class);
+		
 		return tags;
 	}
 	

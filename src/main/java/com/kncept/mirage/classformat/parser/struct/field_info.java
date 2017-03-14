@@ -47,9 +47,9 @@ public class field_info implements ClassFileConstantPoolByteParser {
 		descriptor_index = in.u2();
 		attributes_count = in.u2();
 		attributes = new attribute_info[attributes_count];
+		attribute_info.Factory factory = new attribute_info.Factory();
 		for(int i = 0; i < attributes_count; i++) {
-			attributes[i] = attribute_info.getStruct(in, zeroPaddedConstantPool);
-			attributes[i].parse(in);
+			attributes[i] = factory.getStruct(in, zeroPaddedConstantPool);
 		}
 	}
 

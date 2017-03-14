@@ -30,4 +30,12 @@ public class CONSTANT_Double_info extends cp_info {
 		high_bytes = in.u4();
 		low_bytes = in.u4();
 	}
+	
+	private long toLong() {
+		return (((long) high_bytes) << 32) | (low_bytes & 0xffffffffL);
+	}
+	
+	public double toDouble() {
+		return Double.longBitsToDouble(toLong());
+	}
 }

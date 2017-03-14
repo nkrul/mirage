@@ -12,6 +12,7 @@ import java.nio.charset.CharsetDecoder;
  */
 public class SimpleDataTypesStream {
 	private final InputStream in;
+	private long read;
 	
 	Charset utf8 = Charset.forName("UTF-8");
 	CharsetDecoder utf8Decoder = utf8.newDecoder();
@@ -41,6 +42,11 @@ public class SimpleDataTypesStream {
 		if (read != data.length) {
 			throw new IOException("Unable to read enough bytes: read " + read + " of " + length);
 		}
+		this.read += length;
 		return data;
+	}
+	
+	public long read() {
+		return read;
 	}
 }

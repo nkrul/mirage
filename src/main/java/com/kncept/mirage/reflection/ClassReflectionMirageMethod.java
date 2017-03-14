@@ -1,11 +1,13 @@
 package com.kncept.mirage.reflection;
 
+import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 
 import com.kncept.mirage.Mirage;
+import com.kncept.mirage.MirageAnnotation;
 import com.kncept.mirage.MirageMethod;
 import com.kncept.mirage.MirageType;
 
@@ -38,6 +40,17 @@ public class ClassReflectionMirageMethod implements MirageMethod {
 	public int getModifiers() {
 		return method.getModifiers();
 	}
+	
+	@Override
+	public List<MirageAnnotation> getAnnotations() {
+		List<MirageAnnotation> annotations = new ArrayList<>();
+		Annotation[] methodAnnotations = method.getAnnotations();
+		if (methodAnnotations != null)
+			for(Annotation a: methodAnnotations)
+				annotations.add(new ClassReflectionMirageAnnotation(a));
+		return annotations;
+	}
+
 	
 	@Override
 	public List<MirageType> getParameterTypes() {

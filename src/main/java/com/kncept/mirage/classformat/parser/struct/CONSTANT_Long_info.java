@@ -18,8 +18,8 @@ CONSTANT_Long_info {
  *
  */
 public class CONSTANT_Long_info extends cp_info {
-	int high_bytes;
-	int low_bytes;
+	public int high_bytes;
+	public int low_bytes;
 	
 	public CONSTANT_Long_info(byte tag) {
 		super(tag);
@@ -29,6 +29,10 @@ public class CONSTANT_Long_info extends cp_info {
 	public void parse(SimpleDataTypesStream in) throws IOException {
 		high_bytes = in.u4();
 		low_bytes = in.u4();
+	}
+	
+	public long toLong() {
+		return (((long) high_bytes) << 32) | (low_bytes & 0xffffffffL);
 	}
 	
 }
