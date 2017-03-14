@@ -7,11 +7,13 @@ import java.util.List;
 
 import com.kncept.mirage.Mirage;
 import com.kncept.mirage.MirageField;
+import com.kncept.mirage.MirageMethod;
 import com.kncept.mirage.classformat.parser.SimpleDataTypesStream;
 import com.kncept.mirage.classformat.parser.struct.CONSTANT_Class_info;
 import com.kncept.mirage.classformat.parser.struct.CONSTANT_Utf8_info;
 import com.kncept.mirage.classformat.parser.struct.ClassFile;
 import com.kncept.mirage.classformat.parser.struct.field_info;
+import com.kncept.mirage.classformat.parser.struct.method_info;
 
 public class ClassFormatMirage implements Mirage {
 	
@@ -68,8 +70,16 @@ public class ClassFormatMirage implements Mirage {
 	public List<MirageField> getFields() {
 		List<MirageField> fields = new ArrayList<MirageField>(cf.fields_count);
 		for(field_info field: cf.fields) {
-			fields.add(new ClassFormatMirageField(cf, field));
+			fields.add(new ClassFormatMirageField(this, cf, field));
 		}
 		return fields;
+	}
+	
+	@Override
+	public List<MirageMethod> getMethods() {
+		List<MirageMethod> methods = new ArrayList<>(cf.methods_count);
+		for(method_info method: cf.methods)
+			methods.add(new ClassFormatMirageMethod(this, cf, method));
+		return methods;
 	}
 }

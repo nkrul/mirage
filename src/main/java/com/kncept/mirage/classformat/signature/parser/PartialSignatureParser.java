@@ -50,5 +50,8 @@ public interface PartialSignatureParser {
 		public static PartialSignatureParser classNameSupport(boolean includeGenericsSupport) {
 			return new ClassNamePartialSignatureParser(includeGenericsSupport);
 		}
+		public static PartialSignatureParser voidSupport() {
+			return new PrimitivePartialSignatureParser("V", void.class);
+		}
 	}
 }

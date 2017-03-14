@@ -23,30 +23,8 @@ import com.kncept.mirage.util.MirageProvider;
  * A set of 'generic usage tests'
  *
  */
-public class MirageTest {
-
-	private Class<? extends MirageTest> thisClass = getClass();
-	
-	//fields for testing types and permissions against
-	MirageTest[] arrayObject;
-	MirageTest[][] arrayObject2;
-	
-	int[] intArray;
-	int[][] intArray2;
-	
-	int nativeInteger;
-	Integer objectInteger;
-	
-	boolean nativeBoolean;
-	Boolean objectBoolean;
-	
-	List<?> genericUnknownList;
-	List<Object> genericObjectList;
-	
-	List<? super MirageTest> thisClassSuperObjectList;
-	List<? extends MirageTest> thisClassExtendsObjectList;
-	
-	Map<String, List<MirageTest>> stringToListOfMirageTest;
+public class MirageFieldsTest {
+	private Class<? extends MirageFieldsTest> thisClass = getClass();
 	
 	@TestFactory
 	public Collection<DynamicTest> testFactory() {
@@ -70,24 +48,8 @@ public class MirageTest {
 		assertEquals(thisClass.getSuperclass().getName(), mirage.getSuperclassName());
 	}
 	
-	@ParameterisedTest(source="allTypes")
-	public void emptymplementedInterfaces(MirageProvider provider) {
-		Mirage mirage = provider.mirage(getClass());
-		assertTrue(mirage.getImplementedInterfaces().isEmpty());
-	}
-	
-	@ParameterisedTest(source="allTypes")
-	public void singleInterfaceImplemented(MirageProvider provider) {
-		@SuppressWarnings("unchecked")
-		List<Class<? extends Mirage>> types = Arrays.asList(ClassReflectionMirage.class, ClassFormatMirage.class);
-		for(Class<? extends Mirage> type: types) {
-			Mirage mirage = provider.mirage(type);
-			List<String> interfaces = mirage.getImplementedInterfaces();
-			assertEquals(1, interfaces.size());
-			assertTrue(interfaces.contains(Mirage.class.getName()));
-		}
-	}
-	
+	int[] intArray;
+	int[][] intArray2;
 	@ParameterisedTest(source="allTypes")
 	public void primitiveArrayType(MirageProvider provider) {
 		Mirage mirage = provider.mirage(getClass());
@@ -100,6 +62,8 @@ public class MirageTest {
 		assertEquals(2, intArray.getMirageType().getArrayDepth());
 	}
 	
+	MirageFieldsTest[] arrayObject;
+	MirageFieldsTest[][] arrayObject2;
 	@ParameterisedTest(source="allTypes")
 	public void objectArrayType(MirageProvider provider) {
 		Mirage mirage = provider.mirage(getClass());
@@ -112,6 +76,8 @@ public class MirageTest {
 		assertEquals(2, intArray.getMirageType().getArrayDepth());
 	}
 	
+	int nativeInteger;
+	Integer objectInteger;
 	@ParameterisedTest(source="allTypes")
 	public void integerTypes(MirageProvider provider) {
 		Mirage mirage = provider.mirage(getClass());
@@ -121,6 +87,8 @@ public class MirageTest {
 		assertEquals("java.lang.Integer", objectType.getMirageType().getBaseType());
 	}
 	
+	boolean nativeBoolean;
+	Boolean objectBoolean;
 	@ParameterisedTest(source="allTypes")
 	public void booleanTYpes(MirageProvider provider) {
 		Mirage mirage = provider.mirage(getClass());
@@ -143,7 +111,7 @@ public class MirageTest {
 		assertTrue(genericType.getGenerics().isEmpty()); //this class has no generics in its signature
 	}
 	
-	//Map<String, List<MirageTest>> stringToListOfMirageTest;
+	Map<String, List<MirageFieldsTest>> stringToListOfMirageTest;
 	@ParameterisedTest(source="allTypes")
 	public void multipleGenericsTest(MirageProvider provider) {
 		Mirage mirage = provider.mirage(getClass());
@@ -159,6 +127,7 @@ public class MirageTest {
 		assertEquals(getClass().getName(), type.getGenerics().get(1).getGenerics().get(0).getBaseType());
 	}
 	
+	List<?> genericUnknownList;
 	@ParameterisedTest(source="allTypes")
 	public void genericUnknownList(MirageProvider provider) {
 		Mirage mirage = provider.mirage(getClass());
@@ -170,6 +139,7 @@ public class MirageTest {
 		assertEquals("java.lang.Object", genericArg.getBaseType());
 	}
 	
+	List<Object> genericObjectList;
 	@ParameterisedTest(source="allTypes")
 	public void genericObjectList(MirageProvider provider) {
 		Mirage mirage = provider.mirage(getClass());
@@ -182,6 +152,7 @@ public class MirageTest {
 	}
 	
 	//this one starts with the -
+	List<? super MirageFieldsTest> thisClassSuperObjectList;
 	@ParameterisedTest(source="allTypes")
 	public void thisClassSuperObjectList(MirageProvider provider) {
 		Mirage mirage = provider.mirage(getClass());
@@ -194,6 +165,7 @@ public class MirageTest {
 	}
 	
 	//this one starts with the +
+	List<? extends MirageFieldsTest> thisClassExtendsObjectList;
 	@ParameterisedTest(source="allTypes")
 	public void thisClassExtendsObjectList(MirageProvider provider) {
 		Mirage mirage = provider.mirage(getClass());

@@ -69,7 +69,7 @@ public class FieldTypeSignatureParser implements DescriptorParser {
 		PartialSignatureReqeust request = new PartialSignatureReqeust(descriptor, parsers);
 		for(PartialSignatureParser parser: parsers) {
 			Optional<PartialSignatureResponse> sig = parser.parse(request);
-			if (sig.isPresent() && sig.get().remainingSignature.equals("")) {
+			if (sig.isPresent() && sig.get().remainingSignature.isEmpty()) {
 				return sig.get().mirageType;
 			}
 		}

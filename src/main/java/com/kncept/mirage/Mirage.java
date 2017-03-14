@@ -14,8 +14,11 @@ public interface Mirage {
 	
 	public String getSuperclassName();
 	
+	//TODO: turn this into a List<MirageType> return type
 	public List<String> getImplementedInterfaces();
 	
 	public List<MirageField> getFields();
+	
+	public List<MirageMethod> getMethods();
 	
 }

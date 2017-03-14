@@ -1,5 +1,6 @@
 package com.kncept.mirage.classformat;
 
+import com.kncept.mirage.Mirage;
 import com.kncept.mirage.MirageField;
 import com.kncept.mirage.MirageType;
 import com.kncept.mirage.classformat.parser.struct.CONSTANT_Utf8_info;
@@ -12,12 +13,19 @@ import com.kncept.mirage.classformat.signature.parser.FieldTypeSignatureParser;
 
 public class ClassFormatMirageField implements MirageField {
 	
+	private final Mirage parent;
 	private final ClassFile cf;
 	private final field_info field;
 	
-	public ClassFormatMirageField(ClassFile cf, field_info field) {
+	public ClassFormatMirageField(Mirage parent, ClassFile cf, field_info field) {
+		this.parent = parent;
 		this.cf = cf;
 		this.field = field;
+	}
+	
+	@Override
+	public Mirage getDeclaredBy() {
+		return parent;
 	}
 	
 	@Override

@@ -1,9 +1,7 @@
 package com.kncept.mirage.classformat.signature.parser;
 
-import com.kncept.mirage.MirageType;
-
-public interface DescriptorParser {
+public interface DescriptorParser<T> {
 	
-	public MirageType parse(String descriptor);
+	public T parse(String descriptor);
 	
 }

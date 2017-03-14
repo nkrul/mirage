@@ -1,11 +1,13 @@
 package com.kncept.mirage.reflection;
 
 import java.lang.reflect.Field;
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
 
 import com.kncept.mirage.Mirage;
 import com.kncept.mirage.MirageField;
+import com.kncept.mirage.MirageMethod;
 
 public class ClassReflectionMirage implements Mirage {
 	
@@ -38,9 +40,18 @@ public class ClassReflectionMirage implements Mirage {
 	public List<MirageField> getFields() {
 		List<MirageField> fields = new ArrayList<MirageField>();
 		for(Field field: source.getDeclaredFields()) {
-			fields.add(new ClassReflectionMirageField(field));
+			fields.add(new ClassReflectionMirageField(this, field));
 		}
 		return fields;
+	}
+	
+	@Override
+	public List<MirageMethod> getMethods() {
+		List<MirageMethod> methods = new ArrayList<>();
+		for(Method method: source.getDeclaredMethods()) {
+			methods.add(new ClassReflectionMirageMethod(this, method));
+		}
+		return methods;
 	}
 	
 }
