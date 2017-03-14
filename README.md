@@ -1,4 +1,4 @@
-# mirage [![Build Status](https://travis-ci.org/nkrul/universal-parser.svg?branch=master)](https://travis-ci.org/nkrul/universal-parser)
+# mirage [![Build Status](https://travis-ci.org/nkrul/mirage.svg?branch=master)](https://travis-ci.org/nkrul/mirage)
 Java Pre Classloader Reflection
 
 This Project aims to give you all of the 'useful' parts of reflection, without actually needing to load the class.
