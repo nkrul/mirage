@@ -14,6 +14,8 @@ public interface Mirage {
 	
 	public String getSuperclassName();
 	
+	public List<MirageAnnotation> getAnnotations();
+	
 	//TODO: turn this into a List<MirageType> return type
 	public List<String> getImplementedInterfaces();
 	

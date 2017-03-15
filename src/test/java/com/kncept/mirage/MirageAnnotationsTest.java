@@ -105,6 +105,13 @@ public class MirageAnnotationsTest {
 	
 	@SimpleAnnotation
 	public static class classWithAnnotation {}
+	@ParameterisedTest(source="allTypes")
+	public void canFindClassAnnotations(MirageProvider provider) {
+		Mirage mirage = provider.mirage(classWithAnnotation.class);
+		assertEquals(1, mirage.getAnnotations().size());
+		assertEquals(SimpleAnnotation.class.getName(), mirage.getAnnotations().get(0).getBaseType().getClassName());
+	}
+	
 	
 	
 	

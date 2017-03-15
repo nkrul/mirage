@@ -6,14 +6,18 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.kncept.mirage.Mirage;
+import com.kncept.mirage.MirageAnnotation;
 import com.kncept.mirage.MirageField;
 import com.kncept.mirage.MirageMethod;
 import com.kncept.mirage.classformat.parser.SimpleDataTypesStream;
 import com.kncept.mirage.classformat.parser.struct.CONSTANT_Class_info;
 import com.kncept.mirage.classformat.parser.struct.CONSTANT_Utf8_info;
 import com.kncept.mirage.classformat.parser.struct.ClassFile;
+import com.kncept.mirage.classformat.parser.struct.attribute_info;
 import com.kncept.mirage.classformat.parser.struct.field_info;
 import com.kncept.mirage.classformat.parser.struct.method_info;
+import com.kncept.mirage.classformat.parser.struct.attributes.RuntimeVisibleAnnotations_attribute;
+import com.kncept.mirage.classformat.parser.struct.attributes.RuntimeVisibleAnnotations_attribute.annotation;
 
 public class ClassFormatMirage implements Mirage {
 	
@@ -65,6 +69,21 @@ public class ClassFormatMirage implements Mirage {
 		}
 		return implementedInterfaces;
 	}
+	
+	@Override
+	public List<MirageAnnotation> getAnnotations() {
+		List<MirageAnnotation> annotations = new ArrayList<>();
+		for(attribute_info attr: cf.attributes) {
+			if (attr instanceof RuntimeVisibleAnnotations_attribute) {
+				RuntimeVisibleAnnotations_attribute annotationAttribute = (RuntimeVisibleAnnotations_attribute)attr;
+				for(annotation annotation: annotationAttribute.annotations) {
+					annotations.add(new ClassFormatMirageAnnotation(annotation));
+				}
+			}
+		}
+		return annotations;
+	}
+	
 	
 	@Override
 	public List<MirageField> getFields() {

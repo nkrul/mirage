@@ -1,11 +1,13 @@
 package com.kncept.mirage.reflection;
 
+import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
 
 import com.kncept.mirage.Mirage;
+import com.kncept.mirage.MirageAnnotation;
 import com.kncept.mirage.MirageField;
 import com.kncept.mirage.MirageMethod;
 
@@ -25,6 +27,15 @@ public class ClassReflectionMirage implements Mirage {
 	@Override
 	public String getSuperclassName() {
 		return source.getSuperclass().getName();
+	}
+	
+	@Override
+	public List<MirageAnnotation> getAnnotations() {
+		List<MirageAnnotation> annotations = new ArrayList<>();
+		if (source.getAnnotations() != null)
+			for (Annotation annotation: source.getAnnotations())
+				annotations.add(new ClassReflectionMirageAnnotation(annotation));
+		return annotations;
 	}
 	
 	@Override
