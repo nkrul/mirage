@@ -12,7 +12,7 @@ public interface MirageType {
 	 * A class instance may be obtained by calling {@code Class.forName}
 	 * @return class name
 	 */
-	public String getBaseType();
+	public String getClassName();
 	
 	/**
 	 * ArrayDepth will be zero for non-arrays.
@@ -29,23 +29,23 @@ public interface MirageType {
 	public List<MirageType> getGenerics();
 	
 	public static class SimpleMirageType implements MirageType {
-		private final String baseType;
+		private final String className;
 		private final int arrayDepth;
 		private final List<MirageType> generics;
 		public SimpleMirageType(String baseType) {
 			this(baseType, 0);
 		}
-		public SimpleMirageType(String baseType, int arrayDepth) {
-			this(baseType, arrayDepth, emptyList());
+		public SimpleMirageType(String className, int arrayDepth) {
+			this(className, arrayDepth, emptyList());
 		}
-		public SimpleMirageType(String baseType, int arrayDepth, List<MirageType> generics) {
-			this.baseType = baseType;
+		public SimpleMirageType(String className, int arrayDepth, List<MirageType> generics) {
+			this.className = className;
 			this.arrayDepth = arrayDepth;
 			this.generics = generics;
 		}
 		@Override
-		public String getBaseType() {
-			return baseType;
+		public String getClassName() {
+			return className;
 		}
 		@Override
 		public int getArrayDepth() {

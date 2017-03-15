@@ -34,7 +34,7 @@ public class PrimitivePartialSignatureParserTest {
 	@Test
 	public void mirageTypeIsSetOnMatch() {
 		Optional<PartialSignatureResponse> signature = parse("B");
-		assertEquals("byte", signature.get().mirageType.getBaseType());
+		assertEquals("byte", signature.get().mirageType.getClassName());
 	}
 	
 	private Optional<PartialSignatureResponse> parse(String descriptor) {

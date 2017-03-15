@@ -33,7 +33,7 @@ public class ArrayPartialSignatureParserTest {
 	public void oneDimensionalArray() {
 		Optional<PartialSignatureResponse> sig = parse("[I");
 		assertTrue(sig.isPresent());
-		Assertions.assertEquals("int",  sig.get().mirageType.getBaseType());
+		Assertions.assertEquals("int",  sig.get().mirageType.getClassName());
 		Assertions.assertEquals(1,  sig.get().mirageType.getArrayDepth());
 	}
 	
@@ -41,7 +41,7 @@ public class ArrayPartialSignatureParserTest {
 	public void multiDimensionalArray() {
 		Optional<PartialSignatureResponse> sig = parse("[[[I");
 		assertTrue(sig.isPresent());
-		Assertions.assertEquals("int",  sig.get().mirageType.getBaseType());
+		Assertions.assertEquals("int",  sig.get().mirageType.getClassName());
 		Assertions.assertEquals(3,  sig.get().mirageType.getArrayDepth());
 	}
 

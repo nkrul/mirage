@@ -20,7 +20,7 @@ public class ArrayPartialSignatureParser implements PartialSignatureParser {
 				if (remainingResponse.isPresent()) {
 					return of(new PartialSignatureResponse(
 							new MirageType.SimpleMirageType(
-									remainingResponse.get().mirageType.getBaseType(),
+									remainingResponse.get().mirageType.getClassName(),
 									remainingResponse.get().mirageType.getArrayDepth() + 1,
 									remainingResponse.get().mirageType.getGenerics()),
 							remainingResponse.get().remainingSignature));

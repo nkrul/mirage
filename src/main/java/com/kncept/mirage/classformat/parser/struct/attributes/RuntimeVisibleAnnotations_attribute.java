@@ -5,6 +5,7 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 import com.kncept.mirage.MirageType;
+import com.kncept.mirage.classformat.ClassFormatMirageEnum;
 import com.kncept.mirage.classformat.parser.SimpleDataTypesStream;
 import com.kncept.mirage.classformat.parser.struct.CONSTANT_Double_info;
 import com.kncept.mirage.classformat.parser.struct.CONSTANT_Float_info;
@@ -222,8 +223,9 @@ public class RuntimeVisibleAnnotations_attribute extends attribute_info {
 			case 's':
 				return ((CONSTANT_Utf8_info)zeroPaddedConstantPool[const_value_index]).value();
 			case 'e':
-				//enum_const_value
-				break;
+				String typeName = ((CONSTANT_Utf8_info)zeroPaddedConstantPool[type_name_index]).value();
+				String name = ((CONSTANT_Utf8_info)zeroPaddedConstantPool[const_name_index]).value();
+				return new ClassFormatMirageEnum(new FieldDescriptorParser().parse(typeName), name);
 			case 'c':
 //				//class_info_index
 			case '@':

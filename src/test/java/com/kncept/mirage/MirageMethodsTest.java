@@ -53,7 +53,7 @@ public class MirageMethodsTest {
 	public void voidReturnType(MirageProvider provider) {
 		Mirage mirage = provider.mirage(getClass());
 		MirageMethod method = getMethod("methodWithVoidReturn", mirage.getMethods());
-		assertEquals(void.class.getName(), method.getReturnType().getBaseType());
+		assertEquals(void.class.getName(), method.getReturnType().getClassName());
 	}
 	
 	public Object methodReturningObject(){return null;}
@@ -61,7 +61,7 @@ public class MirageMethodsTest {
 	public void objectReturnType(MirageProvider provider) {
 		Mirage mirage = provider.mirage(getClass());
 		MirageMethod method = getMethod("methodReturningObject", mirage.getMethods());
-		assertEquals(Object.class.getName(), method.getReturnType().getBaseType());
+		assertEquals(Object.class.getName(), method.getReturnType().getClassName());
 	}
 	
 	public Class<? extends MirageMethodsTest> methodReturningObjectWithGenerics(){return getClass();}
@@ -69,9 +69,9 @@ public class MirageMethodsTest {
 	public void parameterisedReturnType(MirageProvider provider) {
 		Mirage mirage = provider.mirage(getClass());
 		MirageMethod method = getMethod("methodReturningObjectWithGenerics", mirage.getMethods());
-		assertEquals(Class.class.getName(), method.getReturnType().getBaseType());
+		assertEquals(Class.class.getName(), method.getReturnType().getClassName());
 		assertEquals(1, method.getReturnType().getGenerics().size());
-		assertEquals(getClass().getName(), method.getReturnType().getGenerics().get(0).getBaseType());
+		assertEquals(getClass().getName(), method.getReturnType().getGenerics().get(0).getClassName());
 	}
 	
 	public void methodWithTypedArg(MirageMethodsTest methodArgOne){}
@@ -81,7 +81,7 @@ public class MirageMethodsTest {
 		MirageMethod method = getMethod("methodWithTypedArg", mirage.getMethods());
 		List<MirageType> returnTypes = method.getParameterTypes();
 		assertEquals(1, returnTypes.size());
-		assertEquals(getClass().getName(), returnTypes.get(0).getBaseType());
+		assertEquals(getClass().getName(), returnTypes.get(0).getClassName());
 	}
 	
 	public void methodWithMultipleTypedArgs(MirageMethodsTest methodArgOne, Object arg2, Runnable thirdArg){}
@@ -91,9 +91,9 @@ public class MirageMethodsTest {
 		MirageMethod method = getMethod("methodWithMultipleTypedArgs", mirage.getMethods());
 		List<MirageType> returnTypes = method.getParameterTypes();
 		assertEquals(3, returnTypes.size());
-		assertEquals(getClass().getName(), returnTypes.get(0).getBaseType());
-		assertEquals(Object.class.getName(), returnTypes.get(1).getBaseType());
-		assertEquals(Runnable.class.getName(), returnTypes.get(2).getBaseType());
+		assertEquals(getClass().getName(), returnTypes.get(0).getClassName());
+		assertEquals(Object.class.getName(), returnTypes.get(1).getClassName());
+		assertEquals(Runnable.class.getName(), returnTypes.get(2).getClassName());
 	}
 	
 	

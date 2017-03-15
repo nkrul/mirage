@@ -19,7 +19,7 @@ public class ClassNamePartialSignatureParserTest {
 	public void canParseSimpleDescriptor() {
 		Optional<PartialSignatureResponse> sig = parse("Ljava/lang/Class;", false);
 		assertTrue(sig.isPresent());
-		assertEquals("java.lang.Class", sig.get().mirageType.getBaseType());
+		assertEquals("java.lang.Class", sig.get().mirageType.getClassName());
 	}
 
 	@Test
@@ -37,7 +37,7 @@ public class ClassNamePartialSignatureParserTest {
 		List<MirageType> generics = sig.get().mirageType.getGenerics();
 		assertEquals(1, generics.size());
 		MirageType generic = generics.get(0);
-		assertEquals("java.lang.Class", generic.getBaseType());
+		assertEquals("java.lang.Class", generic.getClassName());
 	}
 	
 	@Test

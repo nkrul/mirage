@@ -19,7 +19,7 @@ public class ClassReflectionMirageType implements MirageType {
 	}
 
 	@Override
-	public String getBaseType() {
+	public String getClassName() {
 		Class<?> type = this.type;
 		while(type.isArray()) {
 			type = type.getComponentType();

@@ -26,7 +26,7 @@ public class ClassReflectionMirageAnnotation implements MirageAnnotation {
 		Map<String, Object> values = new LinkedHashMap<>();
 		try {
 			for(Method m: src.annotationType().getDeclaredMethods())
-				values.put(m.getName(), m.invoke(src));
+				values.put(m.getName(), ensureTypeIsCorrect(m.invoke(src)));
 		} catch (Exception e) {
 			throw new RuntimeException();
 		}
@@ -34,4 +34,13 @@ public class ClassReflectionMirageAnnotation implements MirageAnnotation {
 		return values;
 	}
 
+	//todo - have an enum type wrapper...
+	private Object ensureTypeIsCorrect(Object type) {
+		if (type instanceof Enum) {
+			return new ClassReflectionMirageEnum((Enum<?>)type);
+		}
+		
+		return type;
+	}
+	
 }
