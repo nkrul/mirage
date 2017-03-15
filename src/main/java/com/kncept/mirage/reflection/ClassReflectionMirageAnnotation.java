@@ -46,6 +46,9 @@ public class ClassReflectionMirageAnnotation implements MirageAnnotation {
 		if (type instanceof Annotation) {
 			return new ClassReflectionMirageAnnotation((Annotation)type);
 		}
+		if (type instanceof Class) {
+			return new ClassReflectionMirageType((Class)type, null);
+		}
 		return type;
 	}
 	

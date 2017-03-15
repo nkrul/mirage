@@ -52,7 +52,7 @@ public class ClassFormatMirage implements Mirage {
 	
 	
 	@Override
-	public String getName() {
+	public String getClassName() {
 		return jvmClassnameToJavaClassname(constantPoolClassInfo(cf.this_class));
 	}
 	

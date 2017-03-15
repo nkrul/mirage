@@ -1,6 +1,7 @@
 package com.kncept.mirage.classformat.parser.struct.attributes;
 
 import java.io.IOException;
+import java.lang.reflect.Array;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -228,18 +229,27 @@ public class RuntimeVisibleAnnotations_attribute extends attribute_info {
 				String name = ((CONSTANT_Utf8_info)zeroPaddedConstantPool[const_name_index]).value();
 				return new ClassFormatMirageEnum(new FieldDescriptorParser().parse(typeName), name);
 			case 'c':
-//				//class_info_index
-				break;
+				String className = ((CONSTANT_Utf8_info)zeroPaddedConstantPool[class_info_index]).value();
+				return new FieldDescriptorParser().parse(className);
 			case '@':
 				return new ClassFormatMirageAnnotation(annotation_value);
-//				annotation_value
 			case '[':
 //				array_value
-				break;
+				
+				//do what we can to infer type
+				if (num_values == 0)
+					return new Object[0]; // ugh
+				
+				Class<?> arrayComponentType = this.values[0].value().getClass();
+				Object[] values = (Object[])Array.newInstance(arrayComponentType, num_values);
+				for(int i = 0; i < num_values; i++) {
+					values[i] = this.values[i].value();
+				}
+				return values;
 			}
 			throw new RuntimeException("Unable to parse: unknown element value tag: " + tag + " " + ((char)tag));
 		}
-		
 	}
+	
 
 }

@@ -13,4 +13,6 @@ public interface MirageEnum {
 	
 	String name();
 	
+	//annotations... INCLUDING type annotations
+	
 }

@@ -39,7 +39,7 @@ public class MirageFieldsTest {
 	@ParameterisedTest(source="allTypes")
 	public void name(MirageProvider provider) {
 		Mirage mirage = provider.mirage(getClass());
-		assertEquals(thisClass.getName(), mirage.getName());
+		assertEquals(thisClass.getName(), mirage.getClassName());
 	}
 	
 	@ParameterisedTest(source="allTypes")

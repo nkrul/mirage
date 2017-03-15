@@ -1,8 +1,12 @@
 package com.kncept.mirage.reflection;
 
+import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
+import java.util.ArrayList;
+import java.util.List;
 
 import com.kncept.mirage.Mirage;
+import com.kncept.mirage.MirageAnnotation;
 import com.kncept.mirage.MirageField;
 import com.kncept.mirage.MirageType;
 
@@ -31,4 +35,13 @@ public class ClassReflectionMirageField implements MirageField {
 		return new ClassReflectionMirageType(source.getType(), source.getGenericType());
 	}
 	
+	@Override
+	public List<MirageAnnotation> getAnnotations() {
+		List<MirageAnnotation> annotations = new ArrayList<>();
+		Annotation[] methodAnnotations = source.getAnnotations();
+		if (methodAnnotations != null)
+			for(Annotation a: methodAnnotations)
+				annotations.add(new ClassReflectionMirageAnnotation(a));
+		return annotations;
+	}
 }

@@ -28,6 +28,7 @@ public interface MirageType {
 	 */
 	public List<MirageType> getGenerics();
 	
+	
 	public static class SimpleMirageType implements MirageType {
 		private final String className;
 		private final int arrayDepth;

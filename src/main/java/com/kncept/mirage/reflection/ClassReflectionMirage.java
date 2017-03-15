@@ -20,7 +20,7 @@ public class ClassReflectionMirage implements Mirage {
 	}
 	
 	@Override
-	public String getName() {
+	public String getClassName() {
 		return source.getName();
 	}
 	

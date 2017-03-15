@@ -1,5 +1,7 @@
 package com.kncept.mirage;
 
+import java.util.List;
+
 public interface MirageField {
 	
 	public Mirage getDeclaredBy();
@@ -8,6 +10,6 @@ public interface MirageField {
 	
 	public MirageType getMirageType();
 	
-	//annotations...
+	public List<MirageAnnotation> getAnnotations();
 
 }
