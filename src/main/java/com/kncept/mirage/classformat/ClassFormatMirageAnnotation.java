@@ -15,13 +15,18 @@ public class ClassFormatMirageAnnotation implements MirageAnnotation {
 	}
 	
 	@Override
-	public MirageType annotationType() {
+	public MirageType getBaseType() {
 		return methodAnnotation.type();
 	}
 	
 	@Override
-	public Map<String, Object> annotationValues() {
+	public Map<String, Object> getAnnotationValues() {
 		return methodAnnotation.values();
+	}
+	
+	@Override
+	public boolean isDefaultsIncluded() {
+		return false;
 	}
 
 }

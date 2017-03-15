@@ -17,12 +17,12 @@ public class ClassReflectionMirageAnnotation implements MirageAnnotation {
 	}
 	
 	@Override
-	public MirageType annotationType() {
+	public MirageType getBaseType() {
 		return new ClassReflectionMirageType(src.annotationType(), null);
 	}
 	
 	@Override
-	public Map<String, Object> annotationValues() {
+	public Map<String, Object> getAnnotationValues() {
 		Map<String, Object> values = new LinkedHashMap<>();
 		try {
 			for(Method m: src.annotationType().getDeclaredMethods())
@@ -34,12 +34,18 @@ public class ClassReflectionMirageAnnotation implements MirageAnnotation {
 		return values;
 	}
 
-	//todo - have an enum type wrapper...
+	@Override
+	public boolean isDefaultsIncluded() {
+		return true;
+	}
+	
 	private Object ensureTypeIsCorrect(Object type) {
 		if (type instanceof Enum) {
 			return new ClassReflectionMirageEnum((Enum<?>)type);
 		}
-		
+		if (type instanceof Annotation) {
+			return new ClassReflectionMirageAnnotation((Annotation)type);
+		}
 		return type;
 	}
 	

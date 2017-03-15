@@ -5,6 +5,7 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 import com.kncept.mirage.MirageType;
+import com.kncept.mirage.classformat.ClassFormatMirageAnnotation;
 import com.kncept.mirage.classformat.ClassFormatMirageEnum;
 import com.kncept.mirage.classformat.parser.SimpleDataTypesStream;
 import com.kncept.mirage.classformat.parser.struct.CONSTANT_Double_info;
@@ -228,10 +229,13 @@ public class RuntimeVisibleAnnotations_attribute extends attribute_info {
 				return new ClassFormatMirageEnum(new FieldDescriptorParser().parse(typeName), name);
 			case 'c':
 //				//class_info_index
+				break;
 			case '@':
+				return new ClassFormatMirageAnnotation(annotation_value);
 //				annotation_value
 			case '[':
 //				array_value
+				break;
 			}
 			throw new RuntimeException("Unable to parse: unknown element value tag: " + tag + " " + ((char)tag));
 		}
