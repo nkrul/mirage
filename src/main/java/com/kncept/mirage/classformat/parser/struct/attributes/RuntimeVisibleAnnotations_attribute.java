@@ -66,7 +66,7 @@ Z	boolean	const_value_index	CONSTANT_Integer
 s	String	const_value_index	CONSTANT_Utf8
 e	Enum type	enum_const_value	Not applicable
 c	Class	class_info_index	Not applicable
-@	Annotation type	annotation_value	Not applicable
+{@literal}	Annotation type	annotation_value	Not applicable
 [	Array type	array_value	Not applicable
 
 </pre>
