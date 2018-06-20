@@ -1,19 +1,18 @@
 package com.kncept.mirage;
 
-import static com.kncept.junit.dataprovider.testfactory.TestFactoryCallback.instanceProvider;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.io.IOException;
-import java.util.Collection;
 import java.util.List;
+import java.util.stream.Stream;
 
-import org.junit.jupiter.api.DynamicTest;
-import org.junit.jupiter.api.TestFactory;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.MethodSource;
 
-import com.kncept.junit.dataprovider.ParameterSource;
-import com.kncept.junit.dataprovider.ParameterisedTest;
+import com.kncept.mirage.annotationstest.ClassWithAnnotation;
+import com.kncept.mirage.annotationstest.InterfaceWithAnnotationAndTypeAnnotation;
 import com.kncept.mirage.util.MirageProvider;
 import com.kncept.mirage.util.annotation.AnnotationWithAnnotation;
 import com.kncept.mirage.util.annotation.AnnotationWithClass;
@@ -22,24 +21,19 @@ import com.kncept.mirage.util.annotation.AnnotationWithString;
 import com.kncept.mirage.util.annotation.AnnotationWithStringArray;
 import com.kncept.mirage.util.annotation.MethodAnnotation;
 import com.kncept.mirage.util.annotation.SimpleAnnotation;
-import com.kncept.mirage.util.annotation.TypeAnnotation;
 import com.kncept.mirage.util.enumeration.SimpleEnum;
 
 public class MirageAnnotationsTest {
 
-	@TestFactory
-	public Collection<DynamicTest> testFactory() {
-		return instanceProvider(this);
-	}
-	
-	@ParameterSource(name="allTypes")
-	public static Object[][] allTypes() throws IOException {
-		return MirageProvider.ParamsProviders.allTypesAsParameters();
+
+	public static Stream<MirageProvider> allTypes() throws IOException {
+		return MirageProvider.allTypesAsParameters();
 	}
 	
 	@MethodAnnotation
 	public void methodWithSingleAnnotation(){}
-	@ParameterisedTest(source="allTypes")
+	@ParameterizedTest
+	@MethodSource("allTypes")
 	public void canFindSingleMethodAnnotations(MirageProvider provider) {
 		Mirage mirage = provider.mirage(getClass());
 		MirageMethod method = getMethod("methodWithSingleAnnotation", mirage.getMethods());
@@ -51,7 +45,8 @@ public class MirageAnnotationsTest {
 	@MethodAnnotation
 	@SimpleAnnotation
 	public void methodWithMultipleAnnotations(){}
-	@ParameterisedTest(source="allTypes")
+	@ParameterizedTest
+	@MethodSource("allTypes")
 	public void canFindmultipleMethodAnnotations(MirageProvider provider) {
 		Mirage mirage = provider.mirage(getClass());
 		MirageMethod method = getMethod("methodWithMultipleAnnotations", mirage.getMethods());
@@ -62,7 +57,8 @@ public class MirageAnnotationsTest {
 	
 	@AnnotationWithString("stringVal")
 	public void methodWithAnnotationWithValue(){}
-	@ParameterisedTest(source="allTypes")
+	@ParameterizedTest
+	@MethodSource("allTypes")
 	public void catGetSimpleAnnotationValues(MirageProvider provider) {
 		Mirage mirage = provider.mirage(getClass());
 		MirageMethod method = getMethod("methodWithAnnotationWithValue", mirage.getMethods());
@@ -73,7 +69,8 @@ public class MirageAnnotationsTest {
 	
 	@AnnotationWithEnum(enumValue=SimpleEnum.FIRST)
 	private void methodWithEnumAnnotation() {}
-	@ParameterisedTest(source="allTypes")
+	@ParameterizedTest
+	@MethodSource("allTypes")
 	public void canGetEnumValues(MirageProvider provider) {
 		Mirage mirage = provider.mirage(getClass());
 		MirageMethod method = getMethod("methodWithEnumAnnotation", mirage.getMethods());
@@ -94,7 +91,8 @@ public class MirageAnnotationsTest {
 	
 	@AnnotationWithClass(MirageAnnotationsTest.class)
 	private void methodWithAnnotationWithClass(){}
-	@ParameterisedTest(source="allTypes")
+	@ParameterizedTest
+	@MethodSource("allTypes")
 	public void getGetAnnotationsWithAClassValue(MirageProvider provider) {
 		Mirage mirage = provider.mirage(getClass());
 		MirageMethod method = getMethod("methodWithAnnotationWithClass", mirage.getMethods());
@@ -107,7 +105,8 @@ public class MirageAnnotationsTest {
 	//TODO bug = empty array types can't be inferred without extra classpath information
 	@AnnotationWithStringArray("strVal1")
 	private void methodWithStringArrayAnnotation(){}
-	@ParameterisedTest(source="allTypes")
+	@ParameterizedTest
+	@MethodSource("allTypes")
 	public void getGetAnnotationsWithAnArrayValue(MirageProvider provider) {
 		Mirage mirage = provider.mirage(getClass());
 		MirageMethod method = getMethod("methodWithStringArrayAnnotation", mirage.getMethods());
@@ -119,7 +118,8 @@ public class MirageAnnotationsTest {
 	
 	@AnnotationWithAnnotation(nested=@SimpleAnnotation)
 	private void methodWithNestedAnnotations() {}
-	@ParameterisedTest(source="allTypes")
+	@ParameterizedTest
+	@MethodSource("allTypes")
 	public void canGetNestedAnnotationValues(MirageProvider provider) {
 		Mirage mirage = provider.mirage(getClass());
 		MirageMethod method = getMethod("methodWithNestedAnnotations", mirage.getMethods());
@@ -131,28 +131,32 @@ public class MirageAnnotationsTest {
 		
 	}
 	
-	@SimpleAnnotation
-	public static class ClassWithAnnotation {}
-	@ParameterisedTest(source="allTypes")
+	@ParameterizedTest
+	@MethodSource("allTypes")
 	public void canFindClassAnnotations(MirageProvider provider) {
 		Mirage mirage = provider.mirage(ClassWithAnnotation.class);
 		assertEquals(1, mirage.getAnnotations().size());
 		assertEquals(SimpleAnnotation.class.getName(), mirage.getAnnotations().get(0).getBaseType().getClassName());
 	}
 	
-	@TypeAnnotation
-	@SimpleAnnotation
-	public static interface InterfaceWithAnnotationAndTypeAnnotation{}
+	@ParameterizedTest
+	@MethodSource("allTypes")
 	public void canFindInterfaceAnnotations(MirageProvider provider) {
 		Mirage mirage = provider.mirage(InterfaceWithAnnotationAndTypeAnnotation.class);
-//		assertEquals(2, mirage.getAnnotations().size());
-//		assertEquals(SimpleAnnotation.class.getName(), mirage.getAnnotations().get(0).getBaseType().getClassName());
+		assertEquals(2, mirage.getAnnotations().size());
+		//ordering :(
+		
+		boolean foundSimpleAnnotation = false;
+		for(MirageAnnotation annotation: mirage.getAnnotations())
+			foundSimpleAnnotation |= SimpleAnnotation.class.getName().equals(annotation.getBaseType().getClassName());
+		assertTrue(foundSimpleAnnotation);
 	}
 	
 	
 	@SimpleAnnotation
 	public Object objectWithAnnotation;
-	@ParameterisedTest(source="allTypes")
+	@ParameterizedTest
+	@MethodSource("allTypes")
 	public void canFindFieldAnnotations(MirageProvider provider) {
 		Mirage mirage = provider.mirage(getClass());
 		MirageField field = getField("objectWithAnnotation", mirage.getFields());

@@ -1,6 +1,5 @@
 package com.kncept.mirage;
 
-import static com.kncept.junit.dataprovider.testfactory.TestFactoryCallback.instanceProvider;
 import static java.lang.reflect.Modifier.isPublic;
 import static java.lang.reflect.Modifier.isStatic;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -9,37 +8,30 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.io.IOException;
-import java.util.Collection;
 import java.util.List;
+import java.util.stream.Stream;
 
-import org.junit.jupiter.api.DynamicTest;
-import org.junit.jupiter.api.TestFactory;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.MethodSource;
 
-import com.kncept.junit.dataprovider.ParameterSource;
-import com.kncept.junit.dataprovider.ParameterisedTest;
 import com.kncept.mirage.util.MirageProvider;
 
 public class MirageMethodsTest {
 
-	
-	@TestFactory
-	public Collection<DynamicTest> testFactory() {
-		return instanceProvider(this);
+	public static Stream<MirageProvider> allTypes() throws IOException {
+		return MirageProvider.allTypesAsParameters();
 	}
 	
-	@ParameterSource(name="allTypes")
-	public static Object[][] allTypes() throws IOException {
-		return MirageProvider.ParamsProviders.allTypesAsParameters();
-	}
-	
-	@ParameterisedTest(source="allTypes")
+	@ParameterizedTest
+	@MethodSource("allTypes")
 	public void methodNamesAreCorrect(MirageProvider provider) {
 		Mirage mirage = provider.mirage(getClass());
 		MirageMethod method = getMethod("methodNamesAreCorrect", mirage.getMethods());
 		assertNotNull(method);
 	}
 	
-	@ParameterisedTest(source="allTypes")
+	@ParameterizedTest
+	@MethodSource("allTypes")
 	public void publicVoidModifiers(MirageProvider provider) {
 		Mirage mirage = provider.mirage(getClass());
 		MirageMethod method = getMethod("publicVoidModifiers", mirage.getMethods());
@@ -49,7 +41,8 @@ public class MirageMethodsTest {
 	}
 	
 	public void methodWithVoidReturn(){}
-	@ParameterisedTest(source="allTypes")
+	@ParameterizedTest
+	@MethodSource("allTypes")
 	public void voidReturnType(MirageProvider provider) {
 		Mirage mirage = provider.mirage(getClass());
 		MirageMethod method = getMethod("methodWithVoidReturn", mirage.getMethods());
@@ -57,7 +50,8 @@ public class MirageMethodsTest {
 	}
 	
 	public Object methodReturningObject(){return null;}
-	@ParameterisedTest(source="allTypes")
+	@ParameterizedTest
+	@MethodSource("allTypes")
 	public void objectReturnType(MirageProvider provider) {
 		Mirage mirage = provider.mirage(getClass());
 		MirageMethod method = getMethod("methodReturningObject", mirage.getMethods());
@@ -65,7 +59,8 @@ public class MirageMethodsTest {
 	}
 	
 	public Class<? extends MirageMethodsTest> methodReturningObjectWithGenerics(){return getClass();}
-	@ParameterisedTest(source="allTypes")
+	@ParameterizedTest
+	@MethodSource("allTypes")
 	public void parameterisedReturnType(MirageProvider provider) {
 		Mirage mirage = provider.mirage(getClass());
 		MirageMethod method = getMethod("methodReturningObjectWithGenerics", mirage.getMethods());
@@ -75,25 +70,27 @@ public class MirageMethodsTest {
 	}
 	
 	public void methodWithTypedArg(MirageMethodsTest methodArgOne){}
-	@ParameterisedTest(source="allTypes")
+	@ParameterizedTest
+	@MethodSource("allTypes")
 	public void singleTypedMethodArg(MirageProvider provider) {
 		Mirage mirage = provider.mirage(getClass());
 		MirageMethod method = getMethod("methodWithTypedArg", mirage.getMethods());
-		List<MirageType> returnTypes = method.getParameterTypes();
-		assertEquals(1, returnTypes.size());
-		assertEquals(getClass().getName(), returnTypes.get(0).getClassName());
+		List<MirageType> paramTypes = method.getParameterTypes();
+		assertEquals(1, paramTypes.size());
+		assertEquals(getClass().getName(), paramTypes.get(0).getClassName());
 	}
 	
 	public void methodWithMultipleTypedArgs(MirageMethodsTest methodArgOne, Object arg2, Runnable thirdArg){}
-	@ParameterisedTest(source="allTypes")
+	@ParameterizedTest
+	@MethodSource("allTypes")
 	public void multipleTypedMethodArgs(MirageProvider provider) {
 		Mirage mirage = provider.mirage(getClass());
 		MirageMethod method = getMethod("methodWithMultipleTypedArgs", mirage.getMethods());
-		List<MirageType> returnTypes = method.getParameterTypes();
-		assertEquals(3, returnTypes.size());
-		assertEquals(getClass().getName(), returnTypes.get(0).getClassName());
-		assertEquals(Object.class.getName(), returnTypes.get(1).getClassName());
-		assertEquals(Runnable.class.getName(), returnTypes.get(2).getClassName());
+		List<MirageType> paramTypes = method.getParameterTypes();
+		assertEquals(3, paramTypes.size());
+		assertEquals(getClass().getName(), paramTypes.get(0).getClassName());
+		assertEquals(Object.class.getName(), paramTypes.get(1).getClassName());
+		assertEquals(Runnable.class.getName(), paramTypes.get(2).getClassName());
 	}
 	
 	

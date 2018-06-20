@@ -1,22 +1,16 @@
 package com.kncept.mirage;
 
-import static com.kncept.junit.dataprovider.testfactory.TestFactoryCallback.instanceProvider;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.io.IOException;
-import java.util.Arrays;
-import java.util.Collection;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Stream;
 
-import org.junit.jupiter.api.DynamicTest;
-import org.junit.jupiter.api.TestFactory;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.MethodSource;
 
-import com.kncept.junit.dataprovider.ParameterSource;
-import com.kncept.junit.dataprovider.ParameterisedTest;
-import com.kncept.mirage.classformat.ClassFormatMirage;
-import com.kncept.mirage.reflection.ClassReflectionMirage;
 import com.kncept.mirage.util.MirageProvider;
 
 /**
@@ -26,23 +20,19 @@ import com.kncept.mirage.util.MirageProvider;
 public class MirageFieldsTest {
 	private Class<? extends MirageFieldsTest> thisClass = getClass();
 	
-	@TestFactory
-	public Collection<DynamicTest> testFactory() {
-		return instanceProvider(this);
+	public static Stream<MirageProvider> allTypes() throws IOException {
+		return MirageProvider.allTypesAsParameters();
 	}
 	
-	@ParameterSource(name="allTypes")
-	public static Object[][] allTypes() throws IOException {
-		return MirageProvider.ParamsProviders.allTypesAsParameters();
-	}
-	
-	@ParameterisedTest(source="allTypes")
+	@ParameterizedTest
+	@MethodSource("allTypes")
 	public void name(MirageProvider provider) {
 		Mirage mirage = provider.mirage(getClass());
 		assertEquals(thisClass.getName(), mirage.getClassName());
 	}
 	
-	@ParameterisedTest(source="allTypes")
+	@ParameterizedTest
+	@MethodSource("allTypes")
 	public void superClass(MirageProvider provider) {
 		Mirage mirage = provider.mirage(getClass());
 		assertEquals(thisClass.getSuperclass().getName(), mirage.getSuperclassName());
@@ -50,7 +40,8 @@ public class MirageFieldsTest {
 	
 	int[] intArray;
 	int[][] intArray2;
-	@ParameterisedTest(source="allTypes")
+	@ParameterizedTest
+	@MethodSource("allTypes")
 	public void primitiveArrayType(MirageProvider provider) {
 		Mirage mirage = provider.mirage(getClass());
 		MirageField intArray = getField("intArray", mirage.getFields());
@@ -64,7 +55,8 @@ public class MirageFieldsTest {
 	
 	MirageFieldsTest[] arrayObject;
 	MirageFieldsTest[][] arrayObject2;
-	@ParameterisedTest(source="allTypes")
+	@ParameterizedTest
+	@MethodSource("allTypes")
 	public void objectArrayType(MirageProvider provider) {
 		Mirage mirage = provider.mirage(getClass());
 		MirageField intArray = getField("arrayObject", mirage.getFields());
@@ -78,7 +70,8 @@ public class MirageFieldsTest {
 	
 	int nativeInteger;
 	Integer objectInteger;
-	@ParameterisedTest(source="allTypes")
+	@ParameterizedTest
+	@MethodSource("allTypes")
 	public void integerTypes(MirageProvider provider) {
 		Mirage mirage = provider.mirage(getClass());
 		MirageField nativeType = getField("nativeInteger", mirage.getFields());
@@ -89,8 +82,9 @@ public class MirageFieldsTest {
 	
 	boolean nativeBoolean;
 	Boolean objectBoolean;
-	@ParameterisedTest(source="allTypes")
-	public void booleanTYpes(MirageProvider provider) {
+	@ParameterizedTest
+	@MethodSource("allTypes")
+	public void booleanTypes(MirageProvider provider) {
 		Mirage mirage = provider.mirage(getClass());
 		MirageField nativeType = getField("nativeBoolean", mirage.getFields());
 		assertEquals("boolean", nativeType.getMirageType().getClassName());
@@ -99,7 +93,8 @@ public class MirageFieldsTest {
 	}
 	
 	////// this is SUCH a generic test...
-	@ParameterisedTest(source="allTypes")
+	@ParameterizedTest
+	@MethodSource("allTypes")
 	public void simpleGenericsTest(MirageProvider provider) {
 		Mirage mirage = provider.mirage(getClass());
 		MirageField field = getField("thisClass", mirage.getFields());
@@ -112,7 +107,8 @@ public class MirageFieldsTest {
 	}
 	
 	Map<String, List<MirageFieldsTest>> stringToListOfMirageTest;
-	@ParameterisedTest(source="allTypes")
+	@ParameterizedTest
+	@MethodSource("allTypes")
 	public void multipleGenericsTest(MirageProvider provider) {
 		Mirage mirage = provider.mirage(getClass());
 		MirageField field = getField("stringToListOfMirageTest", mirage.getFields());
@@ -128,7 +124,8 @@ public class MirageFieldsTest {
 	}
 	
 	List<?> genericUnknownList;
-	@ParameterisedTest(source="allTypes")
+	@ParameterizedTest
+	@MethodSource("allTypes")
 	public void genericUnknownList(MirageProvider provider) {
 		Mirage mirage = provider.mirage(getClass());
 		MirageField field = getField("genericUnknownList", mirage.getFields());
@@ -140,7 +137,8 @@ public class MirageFieldsTest {
 	}
 	
 	List<Object> genericObjectList;
-	@ParameterisedTest(source="allTypes")
+	@ParameterizedTest
+	@MethodSource("allTypes")
 	public void genericObjectList(MirageProvider provider) {
 		Mirage mirage = provider.mirage(getClass());
 		MirageField field = getField("genericObjectList", mirage.getFields());
@@ -153,7 +151,8 @@ public class MirageFieldsTest {
 	
 	//this one starts with the -
 	List<? super MirageFieldsTest> thisClassSuperObjectList;
-	@ParameterisedTest(source="allTypes")
+	@ParameterizedTest
+	@MethodSource("allTypes")
 	public void thisClassSuperObjectList(MirageProvider provider) {
 		Mirage mirage = provider.mirage(getClass());
 		MirageField field = getField("thisClassSuperObjectList", mirage.getFields());
@@ -166,7 +165,8 @@ public class MirageFieldsTest {
 	
 	//this one starts with the +
 	List<? extends MirageFieldsTest> thisClassExtendsObjectList;
-	@ParameterisedTest(source="allTypes")
+	@ParameterizedTest
+	@MethodSource("allTypes")
 	public void thisClassExtendsObjectList(MirageProvider provider) {
 		Mirage mirage = provider.mirage(getClass());
 		MirageField field = getField("thisClassExtendsObjectList", mirage.getFields());
